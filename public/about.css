@@ -1,0 +1,14 @@
+.scrolling-background {
+    background: url('websiteimg1.jpg') repeat-y center center fixed;
+    background-size: cover;
+    animation: scrollBackground 20s linear infinite;
+}
+
+@keyframes scrollBackground {
+    from {
+        background-position: center top;
+    }
+    to {
+        background-position: center bottom;
+    }
+}

@@ -1,0 +1,22 @@
+.moving-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-size: cover;
+    background-position: center;
+    animation: fadeBackground 45s infinite;
+}
+
+@keyframes fadeBackground {
+    0% { background-image: url('websiteimg1.jpg'); opacity: 1; }
+    33% { opacity: 1; }
+    36% { opacity: 0; }
+    40% { background-image: url('websiteimg2.jpg'); opacity: 0; }
+    73% { opacity: 1; }
+    76% { opacity: 0; }
+    80% { background-image: url('websiteimg3.jpg'); opacity: 0; }
+    100% { opacity: 1; }
+}

@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OctopusTech � UI Review for Replit</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --octopus-green: #22c55e;
+      --octopus-dark: #0f172a;
+      --octopus-mid: #1e293b;
+      --octopus-light: #e5e7eb;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: radial-gradient(circle at 20% 20%, rgba(34,197,94,0.15), transparent 40%),
+                  radial-gradient(circle at 80% 10%, rgba(34,197,94,0.1), transparent 35%),
+                  linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 50;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 0 2rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-link {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-link:hover { color: #22c55e; }
+    .btn-primary {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #fff;
+      padding: 0.5rem 1.4rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+    .btn-secondary {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      padding: 0.5rem 1.4rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      font-size: 0.9rem;
+      border: 1px solid rgba(255,255,255,0.15);
+      transition: border-color 0.2s, transform 0.2s;  
+    }
+    .btn-secondary:hover { border-color: rgba(34,197,94,0.6); transform: translateY(-1px); }
+
+    .hero-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 7rem 1.5rem 4rem;
+      position: relative;
+    }
+    .hero-headline {
+      font-size: clamp(2.2rem, 5.5vw, 3.8rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    .hero-subheadline {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: rgba(255,255,255,0.7);
+      max-width: 760px;
+      margin: 0 auto 2rem;
+      line-height: 1.7;
+    }
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem 1.5rem;
+      margin: 1.5rem 0 2.5rem;
+      color: rgba(255,255,255,0.7);
+      font-size: 0.9rem;
+    }
+    .hero-badges span { display: inline-flex; align-items: center; gap: 0.4rem; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1.2rem;
+      max-width: 800px;
+      margin: 2.5rem auto 0;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 1.2rem 1rem;
+      text-align: center;
+    }
+    .stat-number { font-size: 1.6rem; font-weight: 800; color: #22c55e; }
+    .stat-label { color: rgba(255,255,255,0.6); font-size: 0.85rem; }
+
+    .partners-section {
+      padding: 3rem 1rem 1rem;
+      text-align: center;
+      overflow: hidden;
+    }
+    .text-gradient {
+      background: linear-gradient(90deg, #22c55e, #4ade80);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .logo-track {
+      display: flex;
+      align-items: center;
+      gap: 4rem;
+      width: max-content;
+      animation: logo-scroll 28s linear infinite;
+      margin-top: 1.2rem;
+    }
+    .logo-track img {
+      height: 4.5rem;
+      width: auto;
+      opacity: 0.95;
+      filter: drop-shadow(0 4px 16px rgba(34,197,94,0.25));
+      transition: transform 0.3s;
+    }
+    .logo-track img:hover { transform: scale(1.05); }
+    @keyframes logo-scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .section-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(34,197,94,0.3), transparent); margin: 0 auto 3rem; max-width: 900px; }
+
+    .section-label {
+      display: inline-block;
+      background: rgba(34,197,94,0.15);
+      color: #22c55e;
+      border: 1px solid rgba(34,197,94,0.3);
+      padding: 0.3rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .section-title-main {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    .section-intro {
+      color: rgba(255,255,255,0.65);
+      font-size: 1.05rem;
+      max-width: 780px;
+      margin: 0 auto 3rem;
+      line-height: 1.7;
+    }
+
+    .services-section { padding: 5rem 1.5rem; }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .service-card-modern {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 2rem 1.5rem;
+      transition: border-color 0.3s, transform 0.3s;
+      backdrop-filter: blur(8px);
+    }
+    .service-card-modern:hover {
+      border-color: rgba(34,197,94,0.4);
+      transform: translateY(-4px);
+    }
+    .service-icon-wrapper {
+      width: 52px; height: 52px;
+      background: linear-gradient(135deg, rgba(34,197,94,0.2), rgba(34,197,94,0.05));
+      border: 1px solid rgba(34,197,94,0.3);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.2rem;
+      color: #22c55e;
+      font-size: 1.3rem;
+    }
+    .service-title-modern { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.6rem; }
+    .service-description-modern { color: rgba(255,255,255,0.65); font-size: 0.9rem; line-height: 1.6; margin-bottom: 1rem; }
+    .service-features-list { list-style: none; }
+    .service-feature-item {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.85rem; color: rgba(255,255,255,0.7);
+      padding: 0.25rem 0;
+    }
+    .service-feature-item i { color: #22c55e; font-size: 0.75rem; }
+
+    .process-section { padding: 5rem 1.5rem; }
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .process-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 1.6rem 1.4rem;
+    }
+    .process-step {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 0.5rem;
+    }
+    .process-title { font-weight: 700; margin-bottom: 0.5rem; }
+    .process-text { color: rgba(255,255,255,0.65); font-size: 0.9rem; line-height: 1.6; }
+
+    .testimonials-section { padding: 5rem 1.5rem; }
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .testimonial-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 1.8rem 1.5rem;
+    }
+    .testimonial-quote { color: rgba(255,255,255,0.7); font-size: 0.95rem; line-height: 1.7; margin: 0.8rem 0 1.2rem; }
+    .testimonial-name { font-weight: 700; }
+    .testimonial-role { color: rgba(255,255,255,0.55); font-size: 0.85rem; }
+
+    .about-section { padding: 5rem 1.5rem; }
+    .about-card {
+      max-width: 880px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      backdrop-filter: blur(8px);
+    }
+    .about-text { color: rgba(255,255,255,0.7); line-height: 1.8; font-size: 1rem; margin-bottom: 1rem; }
+
+    .capabilities-section { padding: 5rem 1.5rem; }
+    .capability-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      max-width: 900px;
+      margin: 0 auto 2.5rem;
+    }
+    .capability-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 1.2rem 1rem;
+    }
+    .capability-label { font-weight: 600; margin-bottom: 0.6rem; }
+    .capability-bar {
+      height: 8px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .capability-bar span {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, #22c55e, #4ade80);
+    }
+
+    .contact-section { padding: 5rem 1.5rem; }
+    .contact-form-card {
+      max-width: 760px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      backdrop-filter: blur(8px);
+    }
+    .form-intro { color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .form-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 1rem;
+    }
+    .form-input:focus { border-color: #22c55e; }
+    .form-input::placeholder { color: rgba(255,255,255,0.35); }
+    label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 0.4rem; }
+
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding: 3rem 2rem;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      max-width: 1100px;
+      margin: 0 auto 2rem;
+    }
+    .footer-link {
+      display: block;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 0.25rem 0;
+      transition: color 0.2s;
+    }
+    .footer-link:hover { color: #22c55e; }
+    .footer-heading { font-weight: 700; font-size: 1rem; margin-bottom: 1rem; }
+    .footer-bottom { text-align: center; color: rgba(255,255,255,0.4); font-size: 0.8rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; }
+
+    .review-banner {
+      background: linear-gradient(135deg, rgba(34,197,94,0.15), rgba(16,163,74,0.08));
+      border: 1px solid rgba(34,197,94,0.4);
+      border-radius: 12px;
+      padding: 0.8rem 1.4rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #4ade80;
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      white-space: nowrap;
+      box-shadow: 0 4px 24px rgba(34,197,94,0.2);
+    }
+
+    @media (max-width: 900px) {
+      .navbar { padding: 0 1.2rem; }
+      .hero-badges { font-size: 0.85rem; }
+    }
+    @media (max-width: 680px) {
+      .navbar div:last-child { display: none; }
+      .review-banner { display: none; }
+      .hero-section { padding-top: 6rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="review-banner">
+    OctopusTech � UI Review File | React + Tailwind | Dark theme, green accent #22c55e
+  </div>
+
+  <nav class="navbar">
+    <div style="font-size:1.2rem;font-weight:800;letter-spacing:-0.02em;">
+      Octopus <span style="color:#22c55e;">Tech</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:1.5rem;">
+      <a href="#hero" class="nav-link">Home</a>
+      <a href="#services" class="nav-link">Services</a>
+      <a href="#process" class="nav-link">Process</a>
+      <a href="#testimonials" class="nav-link">Testimonials</a>
+      <a href="#contact" class="btn-primary">Start</a>
+    </div>
+  </nav>
+
+  <section id="hero" class="hero-section">
+    <div>
+      <div style="font-size:1rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:0.8rem;">
+        Available for new projects
+      </div>
+      <h1 class="hero-headline">One Operator. Four Disciplines. Zero Overhead.</h1>
+      <p class="hero-subheadline">
+        AI Research, Graphic Design, Data Analysis, and Web Development � delivered by a single specialist who uses AI as a precision instrument. No handoffs. No bloated agency fees. Just results.
+      </p>
+      <div style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;">
+        <a href="#contact" class="btn-primary" style="padding:0.9rem 2rem;font-size:1rem;border-radius:999px;">Start Your Project</a>
+        <a href="#services" class="btn-secondary" style="padding:0.9rem 2rem;font-size:1rem;border-radius:999px;">View Services</a>
+      </div>
+      <div class="hero-badges">
+        <span><i class="fas fa-clock"></i> Response within 24 hours</span>
+        <span><i class="fas fa-handshake"></i> No long-term contracts</span>
+        <span><i class="fas fa-flag-checkered"></i> Delivered to brief, on time</span>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number">15+</div>
+          <div class="stat-label">Projects Delivered</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">4</div>
+          <div class="stat-label">Service Disciplines</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">24h</div>
+          <div class="stat-label">Response Guarantee</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">Client Satisfaction</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="partners-section">
+    <h2 style="font-size:clamp(1.4rem,3vw,2.1rem);font-weight:800;">
+      <span class="text-gradient">Trusted by businesses including</span>
+    </h2>
+    <div style="overflow:hidden;width:100%;margin-top:1.2rem;">
+      <div class="logo-track">
+        <img src="https://placehold.co/140x70/1e293b/22c55e?text=ANITA" alt="Anita" />
+        <img src="https://placehold.co/140x70/1e293b/22c55e?text=GOLDEN" alt="Golden" />
+        <img src="https://placehold.co/140x70/1e293b/22c55e?text=BSIC" alt="BSIC" />
+        <img src="https://placehold.co/140x70/1e293b/22c55e?text=ANITA" alt="Anita" />
+        <img src="https://placehold.co/140x70/1e293b/22c55e?text=GOLDEN" alt="Golden" />
+        <img src="https://placehold.co/140x70/1e293b/22c55e?text=BSIC" alt="BSIC" />
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="services-section">
+    <div class="section-divider"></div>
+    <div style="text-align:center;">
+      <span class="section-label">Services</span>
+      <h2 class="section-title-main">Everything Your Business Needs. From One Reliable Source.</h2>
+      <p class="section-intro">
+        Stop coordinating between four different freelancers. OctopusTech handles your research, design, data, and development under one roof � with full accountability at every step.
+      </p>
+    </div>
+
+    <div class="services-grid">
+      <div class="service-card-modern">
+        <div class="service-icon-wrapper"><i class="fas fa-brain"></i></div>
+        <div>
+          <h3 class="service-title-modern">Market Intelligence & Research</h3>
+          <p class="service-description-modern">AI-powered research that goes beyond Google. Competitor analysis, market sizing, and business intelligence that actually informs decisions � not just fills reports.</p>
+          <ul class="service-features-list">
+            <li class="service-feature-item"><i class="fas fa-check"></i><span>Competitor analysis & audits</span></li>
+            <li class="service-feature-item"><i class="fas fa-check"></i><span>Market research reports</span></li>
+            <li class="service-feature-item"><i class="fas fa-check"></i><span>Industry trend mapping</span></li>
+            <li class="service-feature-item"><i class="fas fa-check"></i><span>Audience & customer insights</span></li>
+            <li class="service-feature-item"><i class="fas fa-check"></i><span>Business intelligence briefs</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="service-card-modern">
+        <div class="service-icon-wrapper"><i class="fas fa-pen-nib"></i></div>
+        <div>
+          <h3 class="service-title-modern">Graphic Design</h3>
+          <p class="service-description-modern">Brand-level design work built in Photoshop and Illustrator. Social content, marketing creatives, and brand identity that commands attention and builds recognition.</p>
+          <ul class="service-features-list">
+            <li class="service-feature-item"><i class="fas fa-check"></i><span>Social media creative design</span></li>
+            <li class="service-feature-item"><i class="fas fa-check"></i><span>Marketing materials & ads</span></li>
+            <li class="service-feature-item"><i class="fas fa-check"></i><span>Brand identity & logo design</span></li>
+            <li class="service-feature-item"><i class="fas fa-check"></i><span>Print & digital assets</span></li>
+            <li class="service-feature-item"><i class="fas fa-check"></i><span>Promotional campaigns</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="service-card-modern">
+        <div class="service-icon-wrapper"><i class="fas fa-chart-line"></i></div>
+        <div>
+          <h3 class="service-title-modern">Data Analysis</h3>
+          <p class="service-description-modern">Turn raw numbers into clear direction. Dashboards, KPI frameworks, and visual reports that tell leadership exactly where to focus � and what to fix.</p>
+          <ul class="service-features-list">
+            <li class="service-feature-item"><i class="fas fa-check"></i><span>Business intelligence dashboards</span></li>
+            <li class="service-feature-item"><i class="fas fa-check"></i><span>KPI tracking & performance reports</span></li>
+            <li class="service-feature-item"><i class="fas fa-check"></i><span>Data visualisation</span></li>
+            <li class="service-feature-item"><i class="fas fa-check"></i><span>Sales & audience analysis</span></li>
+            <li class="service-feature-item"><i class="fas fa-check"></i><span>Actionable insight reporting</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="service-card-modern">
+        <div class="service-icon-wrapper"><i class="fas fa-code"></i></div>
+        <div>
+          <h3 class="service-title-modern">Web & SaaS Development</h3>
+          <p class="service-description-modern">Custom-built websites, web applications, and SaaS tools. No templates. Scripted across languages, integrated with APIs, and deployed � ready to work for your business on day one.</p>
+          <ul class="service-features-list">
+            <li class="service-feature-item"><i class="fas fa-check"></i><span>Custom websites & landing pages</span></li>
+            <li class="service-feature-item"><i class="fas fa-check"></i><span>Web applications & SaaS products</span></li>
+            <li class="service-feature-item"><i class="fas fa-check"></i><span>API integration & automation</span></li>
+            <li class="service-feature-item"><i class="fas fa-check"></i><span>E-commerce solutions</span></li>
+            <li class="service-feature-item"><i class="fas fa-check"></i><span>Performance optimisation</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="process" class="process-section">
+    <div class="section-divider"></div>
+    <div style="text-align:center;">
+      <span class="section-label">Process</span>
+      <h2 class="section-title-main">From Brief to Delivered in 4 Steps</h2>
+      <p class="section-intro">Clear process. No surprises. You always know where your project stands.</p>
+    </div>
+    <div class="process-grid">
+      <div class="process-card">
+        <div class="process-step">01</div>
+        <div class="process-title">Discovery Call</div>
+        <div class="process-text">Submit your project brief. We discuss scope, deliverables, timeline, and budget expectations � no obligation.</div>
+      </div>
+      <div class="process-card">
+        <div class="process-step">02</div>
+        <div class="process-title">Proposal & Quote</div>
+        <div class="process-text">You receive a clear written proposal with itemised pricing, timelines, and exactly what's included.</div>
+      </div>
+      <div class="process-card">
+        <div class="process-step">03</div>
+        <div class="process-title">Execution</div>
+        <div class="process-text">Work begins. You get regular updates and progress check-ins throughout � no radio silence.</div>
+      </div>
+      <div class="process-card">
+        <div class="process-step">04</div>
+        <div class="process-title">Review & Delivery</div>
+        <div class="process-text">Final files delivered with a revision window. Handoff includes all assets and documentation.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="testimonials" class="testimonials-section">
+    <div class="section-divider"></div>
+    <div style="text-align:center;">
+      <span class="section-label">Testimonials</span>
+      <h2 class="section-title-main">What Clients Say</h2>
+    </div>
+    <div class="testimonial-grid">
+      <div class="testimonial-card">
+        <div style="color:#22c55e;">?????</div>
+        <p class="testimonial-quote">"We needed competitor research and a new website fast. OctopusTech delivered both on time, on brief, and above the quality bar we expected. Highly recommend."</p>
+        <div class="testimonial-name">A. Mensah</div>
+        <div class="testimonial-role">Director, Retail Brand</div>
+      </div>
+      <div class="testimonial-card">
+        <div style="color:#22c55e;">?????</div>
+        <p class="testimonial-quote">"The data dashboard they built transformed how we track performance. Clear, actionable, and built exactly the way we described. Worth every penny."</p>
+        <div class="testimonial-name">F. Koroma</div>
+        <div class="testimonial-role">Founder, SaaS Startup</div>
+      </div>
+      <div class="testimonial-card">
+        <div style="color:#22c55e;">?????</div>
+        <p class="testimonial-quote">"Working with one person across design, research, and development could sound risky � but the output was seamless. Everything matched. Everything worked."</p>
+        <div class="testimonial-name">S. Barry</div>
+        <div class="testimonial-role">Marketing Lead, SME</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="about-section">
+    <div class="section-divider"></div>
+    <div style="text-align:center;">
+      <span class="section-label">About OctopusTech</span>
+      <h2 class="section-title-main">Not an Agency. Not a Template Shop.</h2>
+    </div>
+    <div class="about-card">
+      <p class="about-text">OctopusTech is a one-operator digital studio built on a single principle: AI removes the barriers between disciplines. What used to require hiring four specialists can now be handled by one focused, accountable operator � faster, cheaper, and with fewer moving parts.</p>
+      <p class="about-text">Every engagement is treated as a business problem, not a task list. The work is self-taught, AI-accelerated, and fully delivered. Research, design, data, and development do not exist in silos here � they inform each other at every step.</p>
+      <p class="about-text">If you're a small business, a startup, or a solo operator who's tired of coordinating freelancers and managing inconsistent quality, OctopusTech was built for exactly that gap.</p>
+    </div>
+  </section>
+
+  <section class="capabilities-section">
+    <div class="section-divider"></div>
+    <div style="text-align:center;">
+      <span class="section-label">Capability Breakdown</span>
+      <h2 class="section-title-main">Work With Us</h2>
+    </div>
+    <div class="capability-grid">
+      <div class="capability-card">
+        <div class="capability-label">AI Research</div>
+        <div class="capability-bar"><span style="width:95%;"></span></div>
+      </div>
+      <div class="capability-card">
+        <div class="capability-label">Graphic Design</div>
+        <div class="capability-bar"><span style="width:88%;"></span></div>
+      </div>
+      <div class="capability-card">
+        <div class="capability-label">Data Analysis</div>
+        <div class="capability-bar"><span style="width:90%;"></span></div>
+      </div>
+      <div class="capability-card">
+        <div class="capability-label">Web & SaaS Dev</div>
+        <div class="capability-bar"><span style="width:85%;"></span></div>
+      </div>
+    </div>
+    <div class="stats-grid" style="max-width:720px;">
+      <div class="stat-card">
+        <div class="stat-number">15+</div>
+        <div class="stat-label">Projects done</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">24h</div>
+        <div class="stat-label">Response time</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact-section">
+    <div class="section-divider"></div>
+    <div style="text-align:center;margin-bottom:2rem;">
+      <h2 class="section-title-main">Ready to Start?</h2>
+      <p class="section-intro">Let's talk about your project. Fill in the form and you'll receive a personal reply within 24 hours. No automated sequences, no sales team � just a direct conversation about what you need and whether we're the right fit.</p>
+    </div>
+    <div class="contact-form-card">
+      <p class="form-intro">No commitment required. First consultation is always free.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:1.2rem;color:rgba(255,255,255,0.65);font-size:0.9rem;">
+        <span><i class="fas fa-envelope"></i> abdulla@octopustech.org</span>
+        <span><i class="fab fa-instagram"></i> @octopustech</span>
+        <span><i class="fas fa-clock"></i> Mon�Fri, 9am�6pm GMT</span>
+      </div>
+      <form>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div>
+            <label>Full Name *</label>
+            <input class="form-input" type="text" placeholder="Your name" />
+          </div>
+          <div>
+            <label>Company</label>
+            <input class="form-input" type="text" placeholder="Optional" />
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div>
+            <label>Email Address *</label>
+            <input class="form-input" type="email" placeholder="you@email.com" />
+          </div>
+          <div>
+            <label>Phone</label>
+            <input class="form-input" type="tel" placeholder="Optional" />
+          </div>
+        </div>
+        <div>
+          <label>Service Required *</label>
+          <select class="form-input" style="appearance:none;">
+            <option value="" disabled selected>Select a service</option>
+            <option>Market Intelligence & Research</option>
+            <option>Graphic Design</option>
+            <option>Data Analysis</option>
+            <option>Web & SaaS Development</option>
+          </select>
+        </div>
+        <div>
+          <label>Budget Range</label>
+          <input class="form-input" type="text" placeholder="Approximate budget" />
+        </div>
+        <div>
+          <label>Project Details *</label>
+          <textarea class="form-input" rows="5" placeholder="Describe your project, goals, and any deadlines..."></textarea>
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%;padding:0.9rem;font-size:1rem;border-radius:10px;">
+          Send Enquiry
+        </button>
+        <p style="margin-top:0.75rem;color:rgba(255,255,255,0.45);font-size:0.8rem;">Your information is kept confidential and never shared.</p>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div style="font-size:1.3rem;font-weight:800;margin-bottom:0.75rem;">Octopus <span style="color:#22c55e;">Tech</span></div>
+        <p style="color:rgba(255,255,255,0.55);font-size:0.9rem;">Raw problems. Refined results. AI-powered digital services for businesses that need to move fast without sacrificing quality.</p>
+      </div>
+      <div>
+        <p class="footer-heading">Services</p>
+        <a href="#services" class="footer-link">Market Research</a>
+        <a href="#services" class="footer-link">Graphic Design</a>
+        <a href="#services" class="footer-link">Data Analysis</a>
+        <a href="#services" class="footer-link">Web Development</a>
+      </div>
+      <div>
+        <p class="footer-heading">Company</p>
+        <a href="#about" class="footer-link">About</a>
+        <a href="#process" class="footer-link">How It Works</a>
+        <a href="#testimonials" class="footer-link">Testimonials</a>
+        <a href="#contact" class="footer-link">Contact</a>
+      </div>
+      <div>
+        <p class="footer-heading">Get In Touch</p>
+        <a href="mailto:abdulla@octopustech.org" class="footer-link">abdulla@octopustech.org</a>
+        <a href="#contact" class="footer-link">Request a Quote</a>
+        <a href="#contact" class="footer-link">Free Consultation</a>
+      </div>
+    </div>
+    <div class="footer-bottom">� 2026 OctopusTech. All rights reserved. � Built with precision.</div>
+  </footer>
+</body>
+</html>
+
