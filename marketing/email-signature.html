@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Email Signature · OctopusTech</title>
+<style>
+  :root { --ink: #0f172a; --muted: #64748b; --green: #16a34a; --line: #e2e8f0; --page: #f1f5f9; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Inter, "Segoe UI", Arial, sans-serif; background: var(--page); color: var(--ink); }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 40px 16px 64px; }
+  h1 { font-size: 24px; margin: 0 0 6px; }
+  .lead { color: var(--muted); margin: 0 0 28px; font-size: 15px; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 28px; }
+  .label { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 0 0 14px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+  button { font: inherit; font-size: 14px; font-weight: 700; border-radius: 999px; padding: 11px 20px; cursor: pointer; border: 1px solid var(--ink); }
+  .primary { background: var(--ink); color: #fff; }
+  .secondary { background: #fff; color: var(--ink); }
+  .status { min-height: 20px; margin-top: 12px; font-size: 14px; color: var(--green); font-weight: 600; }
+  .steps { margin-top: 28px; display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .step { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; font-size: 14px; line-height: 1.55; }
+  .step b { display: block; margin-bottom: 6px; }
+  .step ol { margin: 0; padding-left: 18px; color: #334155; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Your OctopusTech email signature</h1>
+  <p class="lead">Click <strong>Copy signature</strong>, then paste it into your email app's signature settings. Every link is clickable.</p>
+
+  <div class="card">
+    <p class="label">Preview</p>
+
+    <!-- ===== SIGNATURE START: table layout and inline styles only, so it survives Gmail, Outlook and Apple Mail ===== -->
+    <div id="signature">
+<table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;color:#0f172a;">
+  <tr>
+    <td style="padding:0 18px 0 0;vertical-align:middle;border-right:2px solid #22c55e;">
+      <a href="https://octopustech.org" target="_blank" style="text-decoration:none;">
+        <img src="https://octopustech.org/images/email/octopustech-logo-email.png" width="180" height="34" alt="OctopusTech" style="display:block;border:0;width:180px;height:34px;">
+      </a>
+    </td>
+    <td style="padding:0 0 0 18px;vertical-align:middle;">
+      <div style="font-size:16px;line-height:20px;font-weight:bold;color:#0f172a;">Abdulla Alami</div>
+      <div style="font-size:13px;line-height:18px;color:#475569;padding-top:2px;">Founder, OctopusTech</div>
+      <div style="font-size:12px;line-height:17px;color:#16a34a;font-weight:bold;padding-top:4px;">AI Engineering &middot; Software Development &middot; Payment Integration</div>
+      <table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;margin-top:10px;font-size:13px;line-height:20px;">
+        <tr>
+          <td style="color:#94a3b8;font-size:11px;font-weight:bold;letter-spacing:1px;padding-right:10px;">EMAIL</td>
+          <td><a href="mailto:abdulla@octopustech.org" style="color:#0f172a;text-decoration:none;">abdulla@octopustech.org</a></td>
+        </tr>
+        <tr>
+          <td style="color:#94a3b8;font-size:11px;font-weight:bold;letter-spacing:1px;padding-right:10px;">WEB</td>
+          <td><a href="https://octopustech.org" target="_blank" style="color:#0f172a;text-decoration:none;">octopustech.org</a></td>
+        </tr>
+        <tr>
+          <td style="color:#94a3b8;font-size:11px;font-weight:bold;letter-spacing:1px;padding-right:10px;">WHATSAPP</td>
+          <td><a href="https://wa.me/220877872586?text=Hi%20Abdulla!%20I%20saw%20your%20email%20and%20I'd%20like%20to%20talk%20about%20a%20project." target="_blank" style="color:#0f172a;text-decoration:none;">+220 877 872 586</a></td>
+        </tr>
+      </table>
+      <div style="font-size:12px;line-height:17px;color:#64748b;font-style:italic;padding-top:8px;">Raw problems. Refined results.</div>
+    </td>
+  </tr>
+</table>
+    </div>
+    <!-- ===== SIGNATURE END ===== -->
+
+    <div class="actions">
+      <button class="primary" id="copy-rich">Copy signature</button>
+      <button class="secondary" id="copy-html">Copy HTML code</button>
+    </div>
+    <div class="status" id="status" aria-live="polite"></div>
+  </div>
+
+  <div class="steps">
+    <div class="step"><b>Gmail</b><ol><li>Settings (gear) → See all settings</li><li>General → Signature → Create new</li><li>Paste, then Save changes at the bottom</li></ol></div>
+    <div class="step"><b>Outlook</b><ol><li>Settings → Mail → Compose and reply</li><li>New signature, give it a name</li><li>Paste, then Save</li></ol></div>
+    <div class="step"><b>Apple Mail</b><ol><li>Mail → Settings → Signatures</li><li>Add (+), untick "Always match my default font"</li><li>Paste into the signature box</li></ol></div>
+  </div>
+</div>
+
+<script>
+  const sig = document.getElementById('signature')
+  const status = document.getElementById('status')
+  const say = (t) => { status.textContent = t; setTimeout(() => (status.textContent = ''), 4000) }
+  const html = () => sig.innerHTML.trim()
+
+  // Copies the rendered signature (rich text), which is what Gmail and Outlook paste correctly
+  document.getElementById('copy-rich').onclick = async () => {
+    try {
+      await navigator.clipboard.write([new ClipboardItem({
+        'text/html': new Blob([html()], { type: 'text/html' }),
+        'text/plain': new Blob([sig.innerText], { type: 'text/plain' }),
+      })])
+      say('Signature copied. Paste it into your signature settings.')
+    } catch {
+      // Fallback for browsers without rich clipboard access: select the preview and copy it
+      const r = document.createRange(); r.selectNodeContents(sig)
+      const s = window.getSelection(); s.removeAllRanges(); s.addRange(r)
+      document.execCommand('copy'); s.removeAllRanges()
+      say('Signature copied. Paste it into your signature settings.')
+    }
+  }
+  // For apps that ask for raw HTML
+  document.getElementById('copy-html').onclick = async () => {
+    try { await navigator.clipboard.writeText(html()); say('HTML code copied.') }
+    catch { say('Copy failed: select the preview and press Ctrl+C instead.') }
+  }
+</script>
+</body>
+</html>
