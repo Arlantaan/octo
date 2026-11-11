@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import SEO from '../components/SEO'
-import { getStatus, openOcto, scopeProject, type AIStatus, type AIUsage, type ProjectBrief } from '../ai/api'
-import UnderTheHood from '../ai/UnderTheHood'
+import { getStatus, openOcto, scopeProject, type AIStatus, type ProjectBrief } from '../ai/api'
 
 const MAX_CHARS = 2000
 const EASE_PHI: [number, number, number, number] = [0.382, 0, 0.236, 1]
@@ -58,7 +57,6 @@ const AILab = () => {
   const [loading, setLoading] = useState(false)
   const [brief, setBrief] = useState<ProjectBrief | null>(null)
   const [message, setMessage] = useState('')
-  const [usage, setUsage] = useState<AIUsage | null>(null)
 
   useEffect(() => {
     getStatus().then(setStatus)
@@ -74,7 +72,6 @@ const AILab = () => {
     const result = await scopeProject(problem.trim())
     setBrief(result.brief)
     setMessage(result.message ?? '')
-    if (result.usage) setUsage(result.usage)
     setLoading(false)
   }
 
@@ -91,8 +88,8 @@ const AILab = () => {
           <span className="section-label">AI Lab</span>
           <h1 className="section-title-main">Production AI, running live</h1>
           <p className="section-intro">
-            Two production AI systems operating on this site. Use them directly, and inspect
-            the measured cost and latency of every response.
+            Two production AI systems operating on this site, built to the same standard as client
+            work. Use them directly.
           </p>
           <button className="btn-primary-hero rounded-full mt-6" onClick={() => openOcto()}>
             <i className="fas fa-wand-magic-sparkles mr-2" /> Chat with Octo
@@ -235,13 +232,6 @@ const AILab = () => {
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
-
-        {/* ---- Under the hood ---- */}
-        <div className="ai-card mt-8">
-          <h2 className="text-xl font-bold text-white">Under the hood</h2>
-          <p className="text-white/60 text-sm mt-1 mb-4">Measured route, token usage, cost and latency of your most recent brief.</p>
-          <UnderTheHood usage={usage} empty="Scope a project above to see its measurements here." />
         </div>
 
         {/* ---- How it's built ---- */}

@@ -153,7 +153,7 @@ const AI: Discipline[] = [
       'Quality, cost and latency measured on every change to a prompt or model',
       'Prompt-injection and abuse testing before launch',
     ],
-    proof: 'Octo’s cost, latency and cache behaviour are measured on every reply and shown live under the hood.',
+    proof: 'Octo’s quality, cost and latency are measured on every reply and against a published evaluation.',
   },
   {
     icon: 'fa-gauge-high',

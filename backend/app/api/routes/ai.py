@@ -119,6 +119,8 @@ async def chat(body: ChatRequest, request: Request) -> StreamingResponse:
 
     async def events() -> AsyncIterator[str]:
         async for event in stream_chat(history):
+            if event.get("type") == "done":
+                event = {"type": "done"}  # cost and token figures stay server-side
             yield f"data: {json.dumps(event)}\n\n"
 
     return StreamingResponse(
@@ -137,4 +139,6 @@ async def scope(body: ScopeRequest, request: Request) -> ScopeResult:
             detail=f"Please keep the description under {settings.max_problem_chars} characters.",
         )
     _guard(request)
-    return await scope_project(problem)
+    result = await scope_project(problem)
+    result.usage = None  # cost and token figures stay server-side
+    return result

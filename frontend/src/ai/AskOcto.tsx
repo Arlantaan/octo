@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { getStatus, streamChat, type AIStatus, type AIUsage, type ChatTurn } from './api'
+import { getStatus, streamChat, type AIStatus, type ChatTurn } from './api'
 import RichText from './RichText'
-import UnderTheHood from './UnderTheHood'
 import { canListen, listen, loadMuted, playGreeting, registerQueue, saveMuted, stopSpeaking, VoiceQueue } from './voice'
 
 const MAX_CHARS = 800
@@ -50,8 +49,6 @@ const AskOcto = () => {
   const [input, setInput] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
-  const [usage, setUsage] = useState<AIUsage | null>(null)
-  const [showHood, setShowHood] = useState(false)
   const [status, setStatus] = useState<AIStatus | null>(null)
   const [showGreeting, setShowGreeting] = useState(false)
   const [muted, setMuted] = useState(loadMuted)
@@ -141,9 +138,8 @@ const AskOcto = () => {
               return next
             })
           },
-          onDone: (u) => {
+          onDone: () => {
             speakerRef.current?.flush()
-            setUsage(u)
           },
           onError: (msg) => {
             setError(msg)
@@ -231,7 +227,6 @@ const AskOcto = () => {
     abortRef.current?.abort()
     stopSpeaking()
     setTurns([])
-    setUsage(null)
     setError('')
     setBusy(false)
   }
@@ -342,9 +337,6 @@ const AskOcto = () => {
                     <i className={`fas ${muted ? 'fa-volume-xmark' : 'fa-volume-high'}`} />
                   </button>
                 )}
-                <button className="octo-icon-btn" onClick={() => setShowHood((s) => !s)} aria-pressed={showHood} title="Under the hood">
-                  <i className="fas fa-microchip" />
-                </button>
                 {turns.length > 0 && (
                   <button className="octo-icon-btn" onClick={reset} title="New conversation">
                     <i className="fas fa-rotate-left" />
@@ -355,13 +347,6 @@ const AskOcto = () => {
                 </button>
               </div>
             </header>
-
-            {showHood && (
-              <div className="border-b border-white/10 px-4 py-3 bg-black/20">
-                <div className="text-[11px] font-semibold uppercase tracking-wider text-green-400 mb-2">Under the hood</div>
-                <UnderTheHood usage={usage} compact />
-              </div>
-            )}
 
             <div ref={scrollRef} className="octo-scroll" aria-live="polite">
               <div className="octo-msg octo-msg-ai">
