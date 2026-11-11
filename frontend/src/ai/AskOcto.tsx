@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { getStatus, streamChat, type AIStatus, type AIUsage, type ChatTurn } from './api'
 import RichText from './RichText'
 import UnderTheHood from './UnderTheHood'
-import { canListen, canSpeak, listen, loadMuted, playGreeting, saveMuted, SentenceSpeaker, stopSpeaking } from './voice'
+import { canListen, listen, loadMuted, playGreeting, registerQueue, saveMuted, stopSpeaking, VoiceQueue } from './voice'
 
 const MAX_CHARS = 800
 const STORE_KEY = 'octo-chat-v1'
@@ -57,6 +57,8 @@ const AskOcto = () => {
   const [muted, setMuted] = useState(loadMuted)
   const [listening, setListening] = useState(false)
   const [speaking, setSpeaking] = useState(false)
+  // True after speech is transcribed and is waiting for the visitor to confirm and send
+  const [reviewing, setReviewing] = useState(false)
 
   const scrollRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
@@ -68,7 +70,15 @@ const AskOcto = () => {
   useEffect(() => {
     statusRef.current = status
   }, [status])
-  const speakerRef = useRef(new SentenceSpeaker(() => canSpeak && !mutedRef.current))
+  // Speaks replies in Abdulla's cloned voice; silent unless the clone is configured on the server
+  const speakerRef = useRef<VoiceQueue | null>(null)
+  if (!speakerRef.current) {
+    speakerRef.current = new VoiceQueue(
+      () => Boolean(statusRef.current?.voice) && !mutedRef.current,
+      (on) => setSpeaking(on || greetingPlayingRef.current),
+    )
+    registerQueue(speakerRef.current)
+  }
 
   useEffect(() => {
     mutedRef.current = muted
@@ -94,13 +104,6 @@ const AskOcto = () => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
   }, [turns, busy])
 
-  // Track whether the browser is currently speaking (for the "speaking" indicator)
-  useEffect(() => {
-    if (!canSpeak || !open) return
-    const id = setInterval(() => setSpeaking(greetingPlayingRef.current || window.speechSynthesis.speaking), 250)
-    return () => clearInterval(id)
-  }, [open])
-
   const close = useCallback(() => {
     setOpen(false)
     stopSpeaking()
@@ -119,8 +122,8 @@ const AskOcto = () => {
       if (!question || busy) return
       setError('')
       setInput('')
+      setReviewing(false)
       stopSpeaking()
-      speakerRef.current.reset()
       const history: ChatTurn[] = [...turns, { role: 'user', content: question }]
       setTurns([...history, { role: 'assistant', content: '' }])
       setBusy(true)
@@ -130,7 +133,7 @@ const AskOcto = () => {
         history,
         {
           onText: (t) => {
-            speakerRef.current.push(t)
+            speakerRef.current?.push(t)
             setTurns((prev) => {
               const next = [...prev]
               const last = next[next.length - 1]
@@ -139,7 +142,7 @@ const AskOcto = () => {
             })
           },
           onDone: (u) => {
-            speakerRef.current.flush()
+            speakerRef.current?.flush()
             setUsage(u)
           },
           onError: (msg) => {
@@ -158,9 +161,24 @@ const AskOcto = () => {
     if (!canListen || listening) return
     setError('')
     setListening(true)
+    setReviewing(false)
+    // Anything already typed is kept; speech is appended after it
+    const typedBefore = inputRef.current?.value.trim() ?? ''
+    const join = (t: string) => (typedBefore ? `${typedBefore} ${t}` : t)
     stopListenRef.current = listen({
-      onInterim: (t) => setInput(t),
-      onFinal: (t) => send(t),
+      onInterim: (t) => setInput(join(t)),
+      // Never auto-send: place the transcript in the box for the visitor to check, edit and send
+      onFinal: (t) => {
+        setInput(join(t))
+        setReviewing(true)
+        setTimeout(() => {
+          const el = inputRef.current
+          if (el) {
+            el.focus()
+            el.setSelectionRange(el.value.length, el.value.length)
+          }
+        }, 0)
+      },
       onError: (m) => setError(m),
       onEnd: () => {
         setListening(false)
@@ -212,7 +230,6 @@ const AskOcto = () => {
   const reset = () => {
     abortRef.current?.abort()
     stopSpeaking()
-    speakerRef.current.reset()
     setTurns([])
     setUsage(null)
     setError('')
@@ -229,7 +246,7 @@ const AskOcto = () => {
     status?.reason === 'budget'
       ? 'The AI demo has used its budget for now. Please reach out via /contact.'
       : 'The AI demo is offline right now. You can still reach Abdulla via /contact.'
-  const stateLabel = listening ? 'Listening…' : speaking ? 'Speaking…' : 'AI assistant · Claude Haiku'
+  const stateLabel = listening ? 'Listening…' : speaking ? 'Speaking…' : 'AI assistant'
 
   return (
     <>
@@ -258,7 +275,7 @@ const AskOcto = () => {
               </div>
             </div>
             <div className="mt-3 flex gap-2">
-              {canSpeak || canListen ? (
+              {canListen ? (
                 <button className="octo-greet-primary" onClick={() => openPanel({ greetAloud: true, thenListen: canListen })}>
                   <i className="fas fa-microphone mr-1.5" /> Talk to me
                 </button>
@@ -314,13 +331,13 @@ const AskOcto = () => {
                 </div>
               </div>
               <div className="flex items-center gap-1">
-                {canSpeak && (
+                {status?.voice && (
                   <button
                     className="octo-icon-btn"
                     onClick={() => setMuted((m) => !m)}
                     aria-pressed={!muted}
-                    title={muted ? 'Read replies aloud' : 'Stop reading replies aloud'}
-                    aria-label={muted ? 'Read replies aloud' : 'Stop reading replies aloud'}
+                    title={muted ? "Hear replies in Abdulla's voice" : 'Mute voice'}
+                    aria-label={muted ? "Hear replies in Abdulla's voice" : 'Mute voice'}
                   >
                     <i className={`fas ${muted ? 'fa-volume-xmark' : 'fa-volume-high'}`} />
                   </button>
@@ -401,7 +418,10 @@ const AskOcto = () => {
                 rows={1}
                 placeholder={unavailable ? 'Assistant offline' : listening ? 'Listening… speak now' : 'Ask about Abdulla or your project…'}
                 disabled={unavailable}
-                onChange={(e) => setInput(e.target.value)}
+                onChange={(e) => {
+                  setInput(e.target.value)
+                  if (!e.target.value.trim()) setReviewing(false)
+                }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault()
@@ -414,8 +434,12 @@ const AskOcto = () => {
                 <i className={`fas ${busy ? 'fa-circle-notch fa-spin' : 'fa-paper-plane'}`} />
               </button>
             </form>
-            <div className="octo-foot">
-              {input.length > MAX_CHARS * 0.8 ? `${input.length}/${MAX_CHARS}` : 'AI can make mistakes. Free demo with daily limits.'}
+            <div className={`octo-foot ${reviewing ? 'is-review' : ''}`} aria-live="polite">
+              {reviewing
+                ? 'Check the transcription, edit if needed, then press Send.'
+                : input.length > MAX_CHARS * 0.8
+                  ? `${input.length}/${MAX_CHARS}`
+                  : 'AI can make mistakes. Free demo with daily limits.'}
             </div>
           </motion.section>
         )}

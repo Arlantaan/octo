@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 // Turns site paths (/portfolio), known domains and **bold** into links/emphasis, and "- " lines into bullets.
 // Everything else stays plain text (no HTML is ever injected).
-const TOKEN = /(\*\*[^*]+\*\*|\/(?:about|services|portfolio|partners|contact|quote|ai-lab)\b|\b(?:koyagambia\.com|ambilspeed\.com|trustqualitydesign\.com)\b|\babdulla@octopustech\.org\b)/g
+const TOKEN = /(\*\*[^*]+\*\*|\/(?:about|services|portfolio|partners|contact|quote|ai-lab|ai-engineering|work\/etikz)\b|\b(?:koyagambia\.com|ambilspeed\.com|trustqualitydesign\.com)\b|\babdulla@octopustech\.org\b)/g
 
 function renderInline(text: string, keyBase: string) {
   return text.split(TOKEN).map((part, i) => {

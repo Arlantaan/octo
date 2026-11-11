@@ -12,6 +12,8 @@ from pydantic import BaseModel, Field
 
 from app.ai.limits import ledger, rate_limiter, settings
 from app.ai.service import ScopeResult, scope_project, stream_chat
+from app.ai.muse import muse_settings
+from app.ai.voice_tts import SpeechError, char_ledger, open_speech, voice_settings
 
 router = APIRouter(prefix="/api/ai", tags=["ai"])
 
@@ -27,6 +29,10 @@ class ChatRequest(BaseModel):
 
 class ScopeRequest(BaseModel):
     problem: str = Field(min_length=10)
+
+
+class SpeakRequest(BaseModel):
+    text: str = Field(min_length=1)
 
 
 def _client_ip(request: Request) -> str:
@@ -77,7 +83,33 @@ async def status() -> dict[str, Any]:
     """Whether the demo is available, without revealing anything sensitive."""
     reason = None if settings.has_key else "not_configured"
     reason = reason or ("budget" if ledger.budget_error() else None)
-    return {"available": reason is None, "reason": reason, "model": settings.model}
+    # "voice" is true only when Abdulla's cloned voice is configured; otherwise Octo stays silent
+    return {
+        "available": reason is None,
+        "reason": reason,
+        "model": "OctopusTech AI",  # never expose the model or provider
+        "voice": voice_settings.configured,
+        # Muse on the Meta Model API answers if Claude is unavailable
+        "fallback": muse_settings.has_key,
+    }
+
+
+@router.post("/speak")
+async def speak(body: SpeakRequest, request: Request) -> StreamingResponse:
+    """Speak a short piece of Octo's reply in Abdulla's cloned voice (MP3 stream)."""
+    if not voice_settings.configured:
+        raise HTTPException(status_code=503, detail="Voice isn't configured.")
+    text = " ".join(body.text.split())
+    if len(text) > voice_settings.max_chars_per_request:
+        raise HTTPException(status_code=400, detail="That's too long to speak in one go.")
+    blocked = char_ledger.reserve(_client_ip(request), len(text))
+    if blocked:
+        raise HTTPException(status_code=429, detail=blocked)
+    try:
+        audio = await open_speech(text)
+    except SpeechError:
+        raise HTTPException(status_code=502, detail="Octo's voice is unavailable right now.")
+    return StreamingResponse(audio, media_type="audio/mpeg", headers={"Cache-Control": "no-store"})
 
 
 @router.post("/chat")

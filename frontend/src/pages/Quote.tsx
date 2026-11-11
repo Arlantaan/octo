@@ -137,7 +137,7 @@ const Quote = () => {
           {success && <div className="text-green-400 text-center font-semibold">Thank you! We’ll contact you soon.</div>}
           <button
             type="submit"
-            className="btn-primary w-full py-3 text-lg font-bold"
+            className="btn-primary-hero w-full"
             disabled={submitting}
           >
             {submitting ? 'Submitting...' : 'Request Quote'}

@@ -13,11 +13,11 @@ const NotFound = () => {
       <p className="text-white/70 max-w-md mb-8">
         The page you're looking for doesn't exist or may have moved. Let's get you back on track.
       </p>
-      <div className="flex flex-col sm:flex-row gap-3">
-        <Link to="/" className="btn-primary px-6 py-3 font-semibold">
+      <div className="btn-row">
+        <Link to="/" className="btn-primary-hero">
           Back to Home
         </Link>
-        <Link to="/contact" className="btn-secondary px-6 py-3 font-semibold">
+        <Link to="/contact" className="ai-ghost-btn">
           Contact Us
         </Link>
       </div>

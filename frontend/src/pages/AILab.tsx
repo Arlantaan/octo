@@ -9,9 +9,9 @@ const MAX_CHARS = 2000
 const EASE_PHI: [number, number, number, number] = [0.382, 0, 0.236, 1]
 
 const EXAMPLES = [
-  'My restaurant takes orders on WhatsApp and we keep losing track of them during busy hours.',
-  'We have 150 staff across 9 fuel stations and payroll takes our HR team a full week every month.',
-  'I sell perfume on Instagram but customers keep asking for prices and stock, and I want a proper online shop.',
+  { label: 'Restaurant orders', text: 'My restaurant takes orders on WhatsApp and we keep losing track of them during busy hours.' },
+  { label: 'Multi-site payroll', text: 'We have 150 staff across 9 fuel stations and payroll takes our HR team a full week every month.' },
+  { label: 'Online retail', text: 'I sell perfume on Instagram but customers keep asking for prices and stock, and I want a proper online shop.' },
 ]
 
 const W_ROWS: Array<{ key: keyof ProjectBrief; label: string; icon: string }> = [
@@ -23,12 +23,12 @@ const W_ROWS: Array<{ key: keyof ProjectBrief; label: string; icon: string }> = 
 ]
 
 const BUILT_WITH = [
-  { title: 'Claude Haiku 5.5', body: "Anthropic's fast, low-cost model, called from a Python FastAPI backend through the official SDK." },
-  { title: 'Structured outputs', body: 'The Scoper returns a validated JSON brief (a Pydantic schema), so every field is always there.' },
-  { title: 'Streaming', body: 'Octo’s replies stream word by word over server-sent events, so answers start appearing instantly.' },
-  { title: 'Prompt caching', body: 'The knowledge pack is cached, so repeat requests pay about a tenth of the normal input price.' },
-  { title: 'Guard rails', body: 'Per-visitor limits, a daily and total spend cap, input size limits, and the API key never leaves the server.' },
-  { title: 'Grounded & honest', body: 'Octo only claims work Abdulla has actually done, and says so plainly when something is new to him.' },
+  { title: 'Model selection', body: 'The smallest model that meets the quality bar, chosen by evaluation and served from a Python FastAPI backend, with an automatic fallback to a second provider.' },
+  { title: 'Structured outputs', body: 'The Scoper’s brief is constrained to a validated Pydantic schema, so its structure is guaranteed and downstream software can rely on it.' },
+  { title: 'Streaming', body: 'Replies stream token by token over server-sent events; on a cached request the first words typically arrive in under a second.' },
+  { title: 'Prompt caching', body: 'Stable instructions and knowledge are served from cache, so repeat requests pay a tenth of the standard input price.' },
+  { title: 'Layered guard rails', body: 'Per-visitor rate limits, daily and total spend ceilings, input-size limits and server-side keys, all enforced in code rather than left to the model.' },
+  { title: 'Grounded by design', body: 'Octo is instructed to answer only from a curated knowledge base, and to say plainly when a question falls outside it.' },
 ]
 
 function briefToText(b: ProjectBrief): string {
@@ -82,17 +82,17 @@ const AILab = () => {
     <section className="ai-lab">
       <SEO
         title="AI Lab"
-        description="Try Abdulla's AI work live: Octo, an AI assistant grounded in his portfolio, and the 5 Ws Project Scoper that turns your problem into a project brief."
+        description="Production AI systems running live: Octo, a grounded assistant, and the Five Ws Project Scoper, which turns a described problem into a structured project brief."
         path="/ai-lab"
       />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <div className="text-center max-w-2xl mx-auto">
           <span className="section-label">AI Lab</span>
-          <h1 className="section-title-main">AI engineering, live on this site</h1>
+          <h1 className="section-title-main">Production AI, running live</h1>
           <p className="section-intro">
-            Two small AI products Abdulla built with the Claude API. Try them, then peek under the hood to see exactly
-            what each answer cost.
+            Two production AI systems operating on this site. Use them directly, and inspect
+            the measured cost and latency of every response.
           </p>
           <button className="btn-primary-hero rounded-full mt-6" onClick={() => openOcto()}>
             <i className="fas fa-wand-magic-sparkles mr-2" /> Chat with Octo
@@ -103,10 +103,10 @@ const AILab = () => {
         <div className="ai-card mt-14">
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div>
-              <h2 className="text-2xl font-bold text-white">5 Ws Project Scoper</h2>
+              <h2 className="text-2xl font-bold text-white">Five Ws Project Scoper</h2>
               <p className="text-white/65 mt-1 max-w-2xl">
-                Describe a problem in your own words. The AI breaks it down using Abdulla's Who, What, When, Where, Why
-                method and turns it into a project brief you can send him.
+                Describe a problem in plain language. The system analyses it along the Five Ws (Who, What, When, Where
+                and Why) and returns a structured project brief, ready to submit for a quote.
               </p>
             </div>
             {unavailable && (
@@ -122,14 +122,14 @@ const AILab = () => {
             maxLength={MAX_CHARS}
             value={problem}
             onChange={(e) => setProblem(e.target.value)}
-            placeholder="For example: customers can't find our opening hours and keep calling during service…"
+            placeholder="Describe the problem: who is affected, what is going wrong, and what you want to achieve."
             disabled={unavailable}
           />
           <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap gap-1.5">
               {EXAMPLES.map((ex, i) => (
-                <button key={i} className="octo-chip" onClick={() => setProblem(ex)} disabled={unavailable}>
-                  Example {i + 1}
+                <button key={i} className="octo-chip" onClick={() => setProblem(ex.text)} disabled={unavailable}>
+                  {ex.label}
                 </button>
               ))}
             </div>
@@ -221,12 +221,12 @@ const AILab = () => {
                   </div>
                 </div>
 
-                <div className="mt-6 flex flex-wrap gap-3">
+                <div className="mt-6 btn-row !justify-start">
                   <button
                     className="btn-primary-hero rounded-full"
                     onClick={() => navigate('/quote', { state: { project: briefToText(brief) } })}
                   >
-                    Send this brief to Abdulla <i className="fas fa-arrow-right ml-2" />
+                    Submit this brief for a quote <i className="fas fa-arrow-right ml-2" />
                   </button>
                   <button className="ai-ghost-btn" onClick={() => openOcto(`I just scoped "${brief.title}". What would you suggest as a first step?`)}>
                     Discuss with Octo
@@ -240,13 +240,13 @@ const AILab = () => {
         {/* ---- Under the hood ---- */}
         <div className="ai-card mt-8">
           <h2 className="text-xl font-bold text-white">Under the hood</h2>
-          <p className="text-white/60 text-sm mt-1 mb-4">The real numbers from your last scoping request.</p>
-          <UnderTheHood usage={usage} />
+          <p className="text-white/60 text-sm mt-1 mb-4">Measured route, token usage, cost and latency of your most recent brief.</p>
+          <UnderTheHood usage={usage} empty="Scope a project above to see its measurements here." />
         </div>
 
         {/* ---- How it's built ---- */}
         <div className="mt-14">
-          <h2 className="text-2xl font-bold text-white text-center">How it's built</h2>
+          <h2 className="text-2xl font-bold text-white text-center">Engineering</h2>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {BUILT_WITH.map((b) => (
               <div key={b.title} className="ai-card !p-5">

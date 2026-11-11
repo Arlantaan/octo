@@ -7,10 +7,12 @@ from collections.abc import AsyncIterator
 from typing import Any, Literal
 
 import anthropic
+import httpx
 from pydantic import BaseModel, Field
 
 from app.ai.knowledge import ASSISTANT_INSTRUCTIONS, SCOPER_INSTRUCTIONS
 from app.ai.limits import cost_usd, ledger, settings
+from app.ai.muse import MuseError, muse_settings, stream_muse
 
 _client: anthropic.AsyncAnthropic | None = None
 
@@ -38,7 +40,7 @@ def _usage_summary(usage: Any, started: float) -> dict[str, Any]:
     cost = cost_usd(input_tokens, output_tokens, cache_read, cache_write)
     ledger.record(cost)
     return {
-        "model": settings.model,
+        "model": "primary",  # public label: never expose the model ID
         "input_tokens": input_tokens,
         "output_tokens": output_tokens,
         "cache_read_tokens": cache_read,
@@ -54,8 +56,28 @@ REFUSAL_TEXT = (
 )
 
 
+async def _muse_fallback(messages: list[dict[str, str]], reason: str) -> AsyncIterator[dict[str, Any]]:
+    """Answer through Muse when Claude is unavailable; the visitor sees one seamless reply."""
+    try:
+        async for event in stream_muse(ASSISTANT_INSTRUCTIONS, messages):
+            if event["type"] == "done":
+                event["usage"]["model"] = "fallback"  # public label: never expose the model ID
+                event["usage"]["fallback_reason"] = reason
+            yield event
+    except (MuseError, httpx.HTTPError):
+        yield {"type": "error", "message": "The AI is busy right now. Please try again in a minute."}
+
+
+def _can_fall_back(sent_text: bool) -> bool:
+    return not sent_text and muse_settings.has_key
+
+
 async def stream_chat(messages: list[dict[str, str]]) -> AsyncIterator[dict[str, Any]]:
-    """Yield {'type': 'text'|'done'|'error', ...} events for one assistant reply."""
+    """Yield {'type': 'text'|'done'|'error', ...} events for one assistant reply.
+
+    Claude answers by default. If Claude fails before any text has streamed (rate limit,
+    overload, outage, network), Muse on the Meta Model API answers instead.
+    """
     started = time.perf_counter()
     sent_text = False
     try:
@@ -79,21 +101,33 @@ async def stream_chat(messages: list[dict[str, str]]) -> AsyncIterator[dict[str,
         yield {"type": "done", "usage": _usage_summary(final.usage, started)}
 
     except anthropic.RateLimitError:
-        yield {"type": "error", "message": "The AI is busy right now. Please try again in a minute."}
+        if _can_fall_back(sent_text):
+            async for event in _muse_fallback(messages, "primary_rate_limited"):
+                yield event
+        else:
+            yield {"type": "error", "message": "The AI is busy right now. Please try again in a minute."}
     except anthropic.AuthenticationError:
         yield {"type": "error", "message": "The AI demo isn't configured yet."}
     except anthropic.APIStatusError as e:
-        msg = "The AI had a hiccup. Please try again." if e.status_code >= 500 else "That request couldn't be processed."
-        yield {"type": "error", "message": msg}
+        if e.status_code >= 500 and _can_fall_back(sent_text):
+            async for event in _muse_fallback(messages, f"primary_{e.status_code}"):
+                yield event
+        else:
+            msg = "The AI had a hiccup. Please try again." if e.status_code >= 500 else "That request couldn't be processed."
+            yield {"type": "error", "message": msg}
     except anthropic.APIConnectionError:
-        yield {"type": "error", "message": "Couldn't reach the AI service. Please try again."}
+        if _can_fall_back(sent_text):
+            async for event in _muse_fallback(messages, "primary_unreachable"):
+                yield event
+        else:
+            yield {"type": "error", "message": "Couldn't reach the AI service. Please try again."}
 
 
 Service = Literal[
-    "Market Intelligence & Research",
-    "Graphic Design",
-    "Data Analysis",
-    "Web & SaaS Development",
+    "Web Development",
+    "Software Development",
+    "AI Engineering",
+    "Payment Integration",
 ]
 
 

@@ -34,6 +34,8 @@ export interface AIStatus {
   available: boolean
   reason: 'not_configured' | 'budget' | null
   model: string
+  /** True when Abdulla's cloned voice is configured on the server */
+  voice?: boolean
 }
 
 const AI_BASE = `${API_BASE_URL}/ai`

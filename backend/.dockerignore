@@ -1,0 +1,13 @@
+# Never bake secrets, local state or tooling into the image.
+.env
+.env.*
+venv/
+__pycache__/
+*.pyc
+*.db
+*.json
+*.tmp
+eval_results/
+scripts/
+.pytest_cache/
+.mypy_cache/

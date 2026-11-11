@@ -2,13 +2,12 @@ import { Link } from 'react-router-dom'
 import SEO from '../components/SEO'
 
 const partners = [
-  { name: 'Koya Restaurant', work: 'Website, menu & ordering', logo: '/images/partners/koya.webp' },
-  { name: 'Ambil Speed', work: 'Website & HR system', logo: '/images/partners/ambil-speed.webp' },
-  { name: 'BSIC Gambia', work: 'Branding & signage', logo: '/images/partners/bsic.webp' },
+  { name: 'Koya Restaurant', work: 'Hospitality platform', logo: '/images/partners/koya.webp' },
+  { name: 'Ambil Speed', work: 'Web presence & HR systems', logo: '/images/partners/ambil-speed.webp' },
+  { name: 'BSIC Gambia', work: 'Banking partner', logo: '/images/partners/bsic.webp' },
   { name: 'Coconut Residence', work: 'Digital menu', logo: '/images/partners/coconut-residence.webp' },
-  { name: 'Sensation by Sanu', work: 'E-commerce store', logo: '/images/partners/sensation-by-sanu.webp' },
-  { name: 'Trust Quality Designs', work: 'Company website', logo: '/images/partners/trust-quality-designs.webp', tile: true },
-  { name: 'Golden Horizon Logistics', work: 'Company website', logo: '/images/partners/golden-horizon.webp' },
+  { name: 'Sensation by Sanu', work: 'Direct-to-consumer commerce', logo: '/images/partners/sensation-by-sanu.webp' },
+  { name: 'Trust Quality Designs', work: 'Corporate web presence', logo: '/images/partners/trust-quality-designs.webp', tile: true },
 ]
 
 const PartnersPage = () => {
@@ -16,23 +15,23 @@ const PartnersPage = () => {
     <section className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
       <SEO
         title="Partners"
-        description="Businesses OctopusTech has designed and built for: Koya, Ambil Speed, BSIC Gambia, Trust Quality Designs and more."
+        description="Organisations that have entrusted OctopusTech with their platforms, digital presence and brand systems, including Koya, Ambil Speed, Sensation by Sanu and Trust Quality Designs."
         path="/partners"
       />
 
       <div className="max-w-3xl mx-auto text-center">
         <span className="section-label">Partners</span>
-        <h1 className="section-title-main">Brands I've worked with</h1>
+        <h1 className="section-title-main">Clients &amp; Partners</h1>
         <p className="section-intro">
-          Restaurants, retailers, banks and service companies that trusted OctopusTech with their websites, platforms and brand work.
+          Banking, hospitality, energy, retail and service enterprises that run on platforms and systems engineered by OctopusTech.
         </p>
       </div>
 
-      <div className="mt-12 max-w-6xl mx-auto grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-12 max-w-6xl mx-auto flex flex-wrap justify-center gap-5">
         {partners.map((p) => (
           <div
             key={p.name}
-            className="flex flex-col rounded-2xl border border-white/10 bg-slate-900/70 p-6 transition-colors hover:border-green-500/40"
+            className="flex w-full flex-col rounded-2xl border border-white/10 bg-slate-900/70 p-6 transition-colors hover:border-green-500/40 sm:w-[calc(50%-0.625rem)] lg:w-[calc(33.333%-0.834rem)]"
           >
             <div className="flex h-28 items-center justify-center">
               <img
@@ -51,10 +50,10 @@ const PartnersPage = () => {
       </div>
 
       <div className="mt-16 max-w-3xl mx-auto text-center rounded-2xl border border-white/10 bg-slate-900/60 p-8 sm:p-10">
-        <h2 className="text-2xl sm:text-3xl font-bold text-white">Want your brand here next?</h2>
-        <p className="mt-3 text-white/70">Tell me about the problem you're trying to solve and I'll show you how we can fix it.</p>
+        <h2 className="text-2xl sm:text-3xl font-bold text-white">Begin an engagement</h2>
+        <p className="mt-3 text-white/70">Define the problem; the method will do the rest.</p>
         <Link to="/contact" className="btn-primary-hero rounded-full mt-6">
-          Start Your Project
+          Start a Project
         </Link>
       </div>
     </section>

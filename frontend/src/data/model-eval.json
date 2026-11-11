@@ -1,0 +1,134 @@
+{
+  "run": "20261111",
+  "cases": 24,
+  "categories": [
+    "grounded",
+    "honesty",
+    "injection",
+    "scope",
+    "general"
+  ],
+  "models": [
+    {
+      "id": "model-a",
+      "passed": 24,
+      "total": 24,
+      "by_category": {
+        "grounded": [
+          13,
+          13
+        ],
+        "honesty": [
+          7,
+          7
+        ],
+        "injection": [
+          2,
+          2
+        ],
+        "scope": [
+          1,
+          1
+        ],
+        "general": [
+          1,
+          1
+        ]
+      },
+      "ttft_p50_ms": 906,
+      "ttft_p95_ms": 1041,
+      "cost_per_1k_answers_usd": 0.18
+    },
+    {
+      "id": "model-b@minimal",
+      "passed": 24,
+      "total": 24,
+      "by_category": {
+        "grounded": [
+          13,
+          13
+        ],
+        "honesty": [
+          7,
+          7
+        ],
+        "injection": [
+          2,
+          2
+        ],
+        "scope": [
+          1,
+          1
+        ],
+        "general": [
+          1,
+          1
+        ]
+      },
+      "ttft_p50_ms": 2178,
+      "ttft_p95_ms": 3020,
+      "cost_per_1k_answers_usd": 1.99
+    },
+    {
+      "id": "model-b@low",
+      "passed": 24,
+      "total": 24,
+      "by_category": {
+        "grounded": [
+          13,
+          13
+        ],
+        "honesty": [
+          7,
+          7
+        ],
+        "injection": [
+          2,
+          2
+        ],
+        "scope": [
+          1,
+          1
+        ],
+        "general": [
+          1,
+          1
+        ]
+      },
+      "ttft_p50_ms": 3575,
+      "ttft_p95_ms": 4938,
+      "cost_per_1k_answers_usd": 2.97
+    },
+    {
+      "id": "model-c@low",
+      "passed": 24,
+      "total": 24,
+      "by_category": {
+        "grounded": [
+          13,
+          13
+        ],
+        "honesty": [
+          7,
+          7
+        ],
+        "injection": [
+          2,
+          2
+        ],
+        "scope": [
+          1,
+          1
+        ],
+        "general": [
+          1,
+          1
+        ]
+      },
+      "ttft_p50_ms": 3419,
+      "ttft_p95_ms": 4480,
+      "cost_per_1k_answers_usd": 6.41
+    }
+  ],
+  "total_spend_usd": 0.2772
+}

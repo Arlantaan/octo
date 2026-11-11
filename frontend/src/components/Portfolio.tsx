@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 
 type Category = 'Websites' | 'Platforms' | 'Design' | 'Apps & Automation'
 
@@ -15,6 +16,8 @@ interface Project {
   imagePosition?: string
   icon?: string
   liveUrl?: string
+  /** Internal case-study page */
+  caseStudy?: string
 }
 
 // Real projects only. A "Live" status is used only where the site has been confirmed online.
@@ -24,7 +27,7 @@ const projects: Project[] = [
     client: 'Koya, The Gambia',
     category: 'Websites',
     summary:
-      'Restaurant website with a browsable digital menu, table reservations and customer sign-in, plus a waiter ordering system for the floor. Designed, built and deployed end to end.',
+      'An integrated hospitality platform: a public website with a digital menu, table reservations and customer accounts, coupled to a waiter ordering system for the floor. Designed, engineered and deployed end to end.',
     stack: ['Python', 'FastAPI', 'PostgreSQL', 'JavaScript'],
     status: 'Live',
     image: '/images/portfolio/koya.webp',
@@ -35,7 +38,7 @@ const projects: Project[] = [
     client: 'Ambil Speed, The Gambia',
     category: 'Websites',
     summary:
-      'Company website for a fuel retailer: station finder, bulk and delivery enquiries and a WhatsApp contact line. Moved from WordPress to a fast, hand-coded, mobile-first site.',
+      'Corporate web presence for a national fuel retailer, with a station locator, bulk-supply and delivery enquiries and direct WhatsApp contact. Migrated from WordPress to a hand-engineered, mobile-first build.',
     stack: ['HTML', 'CSS', 'JavaScript', 'PHP'],
     status: 'Live',
     image: '/images/portfolio/ambil-speed.webp',
@@ -46,7 +49,7 @@ const projects: Project[] = [
     client: 'Sensation by Sanu',
     category: 'Websites',
     summary:
-      'E-commerce store for a Gambian perfume house, with a product catalogue, cart and checkout, and a backend for managing products and images.',
+      'Direct-to-consumer commerce for a Gambian perfume house: catalogue, cart and checkout, supported by a dedicated back office for product and media management.',
     stack: ['React', 'TypeScript', 'Zustand', 'Python API'],
     status: 'Client project',
     image: '/images/portfolio/sensation.webp',
@@ -56,7 +59,7 @@ const projects: Project[] = [
     client: 'Coconut Residence',
     category: 'Websites',
     summary:
-      'À la carte digital menu guests open from a QR code: searchable dishes, category tabs and clear pricing in Dalasi, styled to match the hotel brand.',
+      'A QR-accessed à la carte menu for a hotel, with search, category navigation and Dalasi pricing, rendered in the property’s visual identity.',
     stack: ['JavaScript', 'Firebase', 'Cloudflare Workers'],
     status: 'Client project',
     image: '/images/portfolio/coconut-menu.webp',
@@ -66,45 +69,35 @@ const projects: Project[] = [
     client: 'Ambil Speed, The Gambia',
     category: 'Platforms',
     summary:
-      'HR and payroll system running across the company’s stations: employee records, monthly payroll and loans, plus one-click SSHFC, ICF and GRA PAYE submission sheets as PDF or Excel.',
+      'An HR and payroll system operating across the company’s station network: workforce records, monthly payroll and staff loans, with statutory SSHFC, ICF and GRA PAYE submissions generated in a single action as PDF or Excel.',
     stack: ['React', 'TypeScript', 'FastAPI', 'PostgreSQL', 'Docker'],
     status: 'In use',
     image: '/images/portfolio/speed-hr.webp',
     imagePosition: 'object-left-top',
   },
   {
+    title: 'Etikz',
+    client: 'Event ticketing, The Gambia',
+    category: 'Platforms',
+    summary:
+      'A ticketing platform for event promoters. Buyers pay with Wave and carry a signed QR ticket on their phone; promoters run sales, guest lists and a live door view; bouncers scan at the gate, where every ticket is admitted exactly once, even with two scanners on the same QR.',
+    stack: ['React', 'TypeScript', 'FastAPI', 'PostgreSQL', 'Redis', 'Docker'],
+    status: 'Production-ready',
+    image: '/images/portfolio/etikz.webp',
+    caseStudy: '/work/etikz',
+    imagePosition: 'object-top',
+  },
+  {
     title: 'Trust Quality Designs',
     client: 'Branding & signage company',
     category: 'Websites',
     summary:
-      'Website for a branding and signage construction company, showcasing their installations and services with an enquiry flow that emails the team.',
+      'The digital presence of a branding and signage construction firm, presenting its installation portfolio and services through an enquiry pipeline routed directly to the team.',
     stack: ['Next.js', 'TypeScript', 'Tailwind', 'PostgreSQL'],
     status: 'Live',
     image: '/images/portfolio/trust-quality-designs.webp',
     imagePosition: 'object-left-top',
     liveUrl: 'https://trustqualitydesign.com',
-  },
-  {
-    title: 'BSIC Gambia Brand & Signage',
-    client: 'BSIC Gambia',
-    category: 'Design',
-    summary:
-      'Storefront wall signage for the bank’s main branch, plus internal signage and display branding, all designed to BSIC’s brand guidelines from first draft to final install.',
-    stack: ['Photoshop', 'Illustrator'],
-    status: 'Delivered',
-    image: '/images/portfolio/bsic-signage.webp',
-    imagePosition: 'object-center',
-  },
-  {
-    title: 'Golden Horizon Logistics',
-    client: 'Logo design',
-    category: 'Design',
-    summary:
-      'Brand mark for a customs brokerage and logistics company: a hand-drawn golden sunrise breaking over the horizon line, paired with a clean, confident wordmark.',
-    stack: ['Illustrator', 'Photoshop'],
-    status: 'Logo design',
-    image: '/images/portfolio/golden-horizon-logo.webp',
-    imagePosition: 'object-center',
   },
 ]
 
@@ -122,10 +115,10 @@ const Portfolio = () => {
     <section id="portfolio" className="pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-10">
-          <span className="section-label">Real Work. Real Clients.</span>
-          <h2 className="section-title-main">Proof, Not Promises</h2>
+          <span className="section-label">Selected Work</span>
+          <h2 className="section-title-main">Evidence, Not Assertion</h2>
           <p className="section-intro">
-            Websites, platforms, design and apps, all built and shipped for real businesses in The Gambia and beyond.
+            Platforms, websites and software in production for enterprises in The Gambia and beyond.
           </p>
         </div>
 
@@ -147,7 +140,7 @@ const Portfolio = () => {
           ))}
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="flex flex-wrap justify-center gap-6">
           {visible.map((p, i) => (
             <ProjectCard key={p.title} project={p} index={i} />
           ))}
@@ -162,7 +155,7 @@ const ProjectCard = ({ project: p, index }: { project: Project; index: number })
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.4, delay: Math.min(index, 6) * 0.05 }}
-    className="group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-slate-900/70 transition-colors hover:border-green-500/40"
+    className="group flex w-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-slate-900/70 transition-colors hover:border-green-500/40 sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]"
   >
     <div className="relative aspect-[16/10] overflow-hidden bg-slate-950">
       {p.image && p.liveUrl ? (
@@ -212,6 +205,11 @@ const ProjectCard = ({ project: p, index }: { project: Project; index: number })
         ))}
       </div>
 
+      {p.caseStudy && (
+        <Link to={p.caseStudy} className="mt-5 inline-flex items-center text-sm font-semibold text-green-400 hover:text-green-300">
+          Read the payment case study <i className="fas fa-arrow-right ml-2 text-xs"></i>
+        </Link>
+      )}
       {p.liveUrl && (
         <a
           href={p.liveUrl}

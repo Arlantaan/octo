@@ -134,10 +134,10 @@ const Contact = () => {
                 className="w-full px-4 py-2.5 sm:py-3 bg-slate-800/50 border border-white/20 rounded-lg focus:border-green-400 focus:outline-none text-sm sm:text-base"
               >
                 <option value="">Select a service</option>
-                <option value="market-intelligence">Market Intelligence & Research</option>
-                <option value="graphic-design">Graphic Design</option>
-                <option value="data-analysis">Data Analysis</option>
-                <option value="web-saas-development">Web & SaaS Development</option>
+                <option value="web-development">Web Development</option>
+                <option value="software-development">Software Development</option>
+                <option value="ai-engineering">AI Engineering</option>
+                <option value="payment-integration">Payment Integration</option>
                 <option value="consultation">Consultation</option>
                 <option value="other">Other</option>
               </select>

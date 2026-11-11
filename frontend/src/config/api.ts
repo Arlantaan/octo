@@ -1,20 +1,5 @@
-// API Configuration
-const getApiUrl = (): string => {
-  // Check if we're in production (not localhost)
-  const hostname = typeof window !== 'undefined' ? window.location.hostname : ''
-  const isProduction = hostname !== 'localhost' && hostname !== '127.0.0.1'
-  
-  if (isProduction) {
-    // Check if we're on the production domain
-    if (hostname === 'octopustech.org' || hostname === 'www.octopustech.org') {
-      return 'https://octopustech.org/api'
-    }
-    // Fallback to IP if domain not ready
-    return 'http://91.99.78.37/api'
-  }
-  // In development, use proxy (localhost:8000)
-  return '/api'
-}
-
-export const API_BASE_URL = getApiUrl()
-
+// API configuration.
+// The site and its API are always served from the same origin: in development Vite proxies /api to the
+// backend, and in production the web container's Nginx does. A relative path therefore works on
+// octopustech.org, www.octopustech.org and any staging host, with no CORS and no hard-coded server.
+export const API_BASE_URL = '/api'

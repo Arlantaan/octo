@@ -10,6 +10,8 @@ interface SEOProps {
   /** Path only, e.g. "/about". Defaults to current pathname. */
   path?: string
   image?: string
+  /** Keep this page out of search engines (e.g. the private Academy) */
+  noindex?: boolean
 }
 
 /** Sets/updates a meta tag by name or property. */
@@ -37,13 +39,14 @@ const setCanonical = (url: string) => {
  * Lightweight per-page SEO. Updates document title and social/meta tags on mount.
  * Avoids pulling in react-helmet for a small marketing SPA.
  */
-const SEO = ({ title, description, path, image = DEFAULT_IMAGE }: SEOProps) => {
+const SEO = ({ title, description, path, image = DEFAULT_IMAGE, noindex = false }: SEOProps) => {
   useEffect(() => {
     const fullTitle = `${title} | ${SITE_NAME}`
     const url = `${SITE_URL}${path ?? window.location.pathname}`
 
     document.title = fullTitle
     setMeta('name', 'description', description)
+    setMeta('name', 'robots', noindex ? 'noindex, nofollow' : 'index, follow')
     setCanonical(url)
 
     // Open Graph
@@ -59,7 +62,7 @@ const SEO = ({ title, description, path, image = DEFAULT_IMAGE }: SEOProps) => {
     setMeta('name', 'twitter:title', fullTitle)
     setMeta('name', 'twitter:description', description)
     setMeta('name', 'twitter:image', image)
-  }, [title, description, path, image])
+  }, [title, description, path, image, noindex])
 
   return null
 }

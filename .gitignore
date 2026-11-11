@@ -51,6 +51,8 @@ server-config.env
 # AI demo spend ledger
 ai_usage.json
 ai_usage.tmp
+muse_usage.json
+muse_usage.tmp
 
 # --- Kept local, never published (secrets / personal data) ---
 *.db
@@ -62,3 +64,10 @@ cv-access-card.html
 frontend/src/pages/CVPage.tsx
 frontend/.env.local
 frontend/.env.production
+
+# Octo voice usage ledger
+voice_usage.json
+voice_usage.tmp
+
+# Internal model evaluation output (names providers; never publish)
+backend/eval_results/

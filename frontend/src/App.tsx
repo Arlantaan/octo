@@ -4,6 +4,8 @@ import Footer from './components/Footer'
 import GoldenField from './components/GoldenField'
 import AskOcto from './ai/AskOcto'
 import AILab from './pages/AILab'
+import AIEngineering from './pages/AIEngineering'
+import CaseStudyEtikz from './pages/CaseStudyEtikz'
 import Home from './pages/Home'
 import AboutPage from './pages/AboutPage'
 import ServicesPage from './pages/ServicesPage'
@@ -52,6 +54,8 @@ function App() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/quote" element={<Quote />} />
             <Route path="/ai-lab" element={<AILab />} />
+            <Route path="/ai-engineering" element={<AIEngineering />} />
+            <Route path="/work/etikz" element={<CaseStudyEtikz />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="*" element={<NotFound />} />
           </Route>

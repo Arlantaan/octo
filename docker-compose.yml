@@ -1,0 +1,36 @@
+# OctopusTech: a self-contained stack that shares nothing with other sites on the same server.
+#
+#   name: octopustech namespaces the containers, the network (octopustech_default) and the volume
+#   (octopustech_data), so nothing collides with Trust Quality Designs or anything else on the box.
+#   The only port bound on the host is the web container on 127.0.0.1:${WEB_PORT:-3200}: nothing is
+#   reachable from the internet except through the host's Nginx (deploy/nginx/octopustech.org.conf).
+#
+#   Secrets come from ./.env on the server (copy .env.production.example). Never commit it.
+name: octopustech
+
+services:
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      ALLOWED_ORIGINS: https://octopustech.org,https://www.octopustech.org
+    volumes:
+      - data:/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/ai/status', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    # No ports: reachable only from the web container, over this project's own network.
+
+  web:
+    build: ./frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "127.0.0.1:${WEB_PORT:-3200}:80"
+
+volumes:
+  data:

@@ -7,7 +7,7 @@ const Home = () => {
     <div>
       <SEO
         title="Raw Problems. Refined Results."
-        description="AI research, graphic design, data analysis, and web & SaaS development — self-taught, AI-powered, fully delivered. Agency quality, without agency pricing."
+        description="AI research, Design, data analysis, and web & SaaS development — self-taught, AI-powered, fully delivered. Agency quality, without agency pricing."
         path="/"
       />
       <Hero />

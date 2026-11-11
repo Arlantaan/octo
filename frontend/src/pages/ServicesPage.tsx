@@ -7,24 +7,28 @@ const ServicesPage = () => {
 
   const services = [
     {
+      icon: 'fa-window-maximize',
+      title: 'Web Development',
+      description: 'High-performance websites, e-commerce and web applications, engineered for speed, search and conversion, and deployed on infrastructure that scales with demand.',
+      points: ['Websites and web applications', 'E-commerce with back-office admin', 'Performance, SEO and accessibility'],
+    },
+    {
+      icon: 'fa-server',
+      title: 'Software Development',
+      description: 'Business systems, SaaS platforms, backends and integrations that carry real operations: payroll, payments, reporting and every rule the business depends on.',
+      points: ['SaaS platforms and business systems', 'APIs, integrations and data pipelines', 'System design, cloud and scalability'],
+    },
+    {
       icon: 'fa-brain',
-      title: 'Market Intelligence & Research',
-      description: 'Competitor analysis, market research, and business intelligence powered by AI — surfacing the signal your competitors can\'t find and you need to move with confidence.',
+      title: 'AI Engineering',
+      description: 'Production AI built into software with the same rigour: grounded assistants, agents and automation, measured against explicit standards and economical at scale.',
+      points: ['RAG assistants on your own data', 'Agents and workflow automation', 'Evaluation, guard rails and cost control'],
     },
     {
-      icon: 'fa-pen-nib',
-      title: 'Graphic Design',
-      description: 'Social media posts, marketing creatives, brand identity and signage — built in Photoshop and Illustrator. Every pixel intentional. Every post designed to convert attention into action.',
-    },
-    {
-      icon: 'fa-chart-line',
-      title: 'Data Analysis',
-      description: 'You have data. You don\'t have clarity. Dashboards, KPI reports, audience and sales analysis that tell you exactly where to move — navigation clarity, driven by numbers.',
-    },
-    {
-      icon: 'fa-laptop-code',
-      title: 'Web & SaaS Development',
-      description: 'Websites, e-commerce platforms, web apps and SaaS tools — built, tested, integrated and deployed. Self-taught, AI-accelerated, fully shipped. Hetzner, Contabo, Firebase — affordable hosting that scales.',
+      icon: 'fa-credit-card',
+      title: 'Payment Integration',
+      description: 'Accept mobile money and cards in your website, app or platform: Wave, Visa, Mastercard and regional gateways, integrated securely, reconciled automatically and built to never charge a customer twice.',
+      points: ['Wave checkout, merchant payments and payouts', 'Visa and Mastercard through card gateways', 'Signed webhooks, reconciliation and refunds'],
     },
   ]
 
@@ -32,7 +36,7 @@ const ServicesPage = () => {
     <section id="services" className="services-section relative py-16">
       <SEO
         title="Services"
-        description="Market intelligence & research, graphic design, data analysis, and web & SaaS development — four disciplines, one operator."
+        description="Web development, software development, AI engineering and payment integration: four disciplines under a single method, from first principle to production."
       />
       <div className="services-container relative z-10">
         <motion.div
@@ -42,10 +46,10 @@ const ServicesPage = () => {
           transition={{ duration: 0.8 }}
           className="services-header"
         >
-          <span className="section-label">What I Do</span>
-          <h2 className="section-title-main">Four Arms. One Operator.</h2>
+          <span className="section-label">Capabilities</span>
+          <h2 className="section-title-main">Four Disciplines. One Method.</h2>
           <p className="section-intro">
-            If you're a small business, a startup, or a solo operator who needs design, data, development and research — without hiring four different people — this is built for you. Agency quality. Not agency pricing.
+            Web, software, AI and payments engineered as one system rather than fragmented across vendors. Institutional quality, without institutional overhead.
           </p>
         </motion.div>
 
@@ -69,6 +73,9 @@ const ServicesPage = () => {
               <p className="text-white/70 leading-relaxed text-base">
                 {service.description}
               </p>
+              <ul className="career-points mt-5">
+                {service.points.map((p) => <li key={p}>{p}</li>)}
+              </ul>
             </motion.div>
           ))}
         </div>

@@ -27,7 +27,7 @@ const Hero = () => {
           className="hero-subheadline text-base sm:text-lg md:text-xl text-center text-white/75"
           style={{ maxWidth: '640px', marginLeft: 'auto', marginRight: 'auto' }}
         >
-          AI Research. Graphic Design. Data Analysis. Web & SaaS Dev. Self-taught, fintech-proven and fully delivered. Happy to join your team, never one to wait around.
+          Web, software, AI and payments, unified under one method: every problem interrogated at its root and carried from first principle to production.
         </motion.p>
 
         {/* CTA Buttons */}
@@ -52,7 +52,7 @@ const Hero = () => {
           transition={{ duration: 0.8, delay: 0.75 }}
           className="flex flex-wrap justify-center gap-2.5 sm:gap-3 mt-10"
         >
-          {['AI Research', 'Graphic Design', 'Data Analysis', 'Web & SaaS'].map((label) => (
+          {['Web Development', 'Software Development', 'AI Engineering', 'Payment Integration'].map((label) => (
             <span
               key={label}
               className="px-4 py-2 rounded-full text-xs sm:text-sm font-medium text-white/80 bg-white/5 border border-white/10 backdrop-blur-sm"

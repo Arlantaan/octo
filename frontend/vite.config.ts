@@ -28,7 +28,8 @@ export default defineConfig({
     strictPort: false, // Try next port if 3000 is taken
     proxy: {
       '/api': {
-        target: 'http://localhost:8000',
+        // Override with API_PROXY_TARGET (e.g. http://localhost:8010) when port 8000 is taken
+        target: process.env.API_PROXY_TARGET || 'http://localhost:8000',
         changeOrigin: true,
       },
     },

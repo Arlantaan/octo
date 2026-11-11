@@ -1,10 +1,15 @@
 /**
- * Browser-native voice for Octo: text-to-speech (speechSynthesis) and speech-to-text (SpeechRecognition).
- * Free, runs on the visitor's device, no extra API calls. Both degrade gracefully when unsupported
- * (e.g. Firefox has no SpeechRecognition): the chat simply stays text-only.
+ * Octo's voice.
+ *  - Speaking: Abdulla's cloned voice (ElevenLabs, via our backend /api/ai/speak). There is no robot
+ *    fallback: if the clone isn't configured or fails, Octo simply stays silent and answers in text.
+ *  - Greeting: Abdulla's own recorded welcome clip.
+ *  - Listening: the browser's SpeechRecognition (free, on-device/browser service).
  */
 
-// Minimal typings for the Web Speech recognition API (not in TypeScript's DOM lib everywhere)
+import { API_BASE_URL } from '../config/api'
+
+// ---------- Listening (speech-to-text) ----------
+
 interface RecognitionAlternative { transcript: string }
 interface RecognitionResult { isFinal: boolean; 0: RecognitionAlternative; length: number }
 interface RecognitionEvent { resultIndex: number; results: ArrayLike<RecognitionResult> }
@@ -28,158 +33,7 @@ const RecognitionImpl: RecognitionCtor | undefined =
        (window as unknown as { webkitSpeechRecognition?: RecognitionCtor }).webkitSpeechRecognition)
     : undefined
 
-export const canSpeak = typeof window !== 'undefined' && 'speechSynthesis' in window
 export const canListen = Boolean(RecognitionImpl)
-
-const MUTE_KEY = 'octo-voice-muted'
-/** Spoken replies use the browser's built-in voice, so they're off unless the visitor turns them on. */
-export function loadMuted(): boolean {
-  try {
-    return localStorage.getItem(MUTE_KEY) !== '0'
-  } catch {
-    return true
-  }
-}
-export function saveMuted(muted: boolean): void {
-  try {
-    localStorage.setItem(MUTE_KEY, muted ? '1' : '0')
-  } catch {
-    /* preference just won't persist */
-  }
-}
-
-// ---------- Abdulla's recorded greeting ----------
-
-/** Abdulla's own recorded welcome (AAC/.m4a plays in every modern browser). */
-export const GREETING_URL = '/audio/welcome.m4a'
-
-let greetingAvailable: Promise<boolean> | null = null
-
-/** Check once whether the recording exists, so a missing file never causes a delay or an error. */
-export function hasGreeting(): Promise<boolean> {
-  if (!greetingAvailable) {
-    greetingAvailable = fetch(GREETING_URL, { method: 'HEAD' })
-      .then((r) => r.ok && (r.headers.get('content-type') ?? '').startsWith('audio'))
-      .catch(() => false)
-  }
-  return greetingAvailable
-}
-
-let greetingAudio: HTMLAudioElement | null = null
-
-/**
- * Play the recorded greeting. Must be called from a click (browsers block audio otherwise).
- * Calls onEnd when it finishes, fails, or there is no recording, so the next step always runs.
- */
-export function playGreeting(onEnd: () => void): void {
-  hasGreeting().then((ok) => {
-    if (!ok) return onEnd()
-    greetingAudio?.pause()
-    const audio = new Audio(GREETING_URL)
-    greetingAudio = audio
-    let done = false
-    const finish = () => {
-      if (done) return
-      done = true
-      onEnd()
-    }
-    audio.onended = finish
-    audio.onerror = finish
-    audio.play().catch(finish)
-  })
-}
-
-export function stopGreeting(): void {
-  greetingAudio?.pause()
-  greetingAudio = null
-}
-
-// ---------- Speaking (browser voice, opt-in) ----------
-
-let chosenVoice: SpeechSynthesisVoice | null = null
-
-function pickVoice(): SpeechSynthesisVoice | null {
-  if (!canSpeak) return null
-  const voices = window.speechSynthesis.getVoices()
-  if (!voices.length) return null
-  const english = voices.filter((v) => v.lang.toLowerCase().startsWith('en'))
-  const pool = english.length ? english : voices
-  // Prefer the higher-quality neural voices most browsers now ship
-  const rank = (v: SpeechSynthesisVoice) =>
-    (/natural|neural|online/i.test(v.name) ? 4 : 0) +
-    (/google|microsoft|samantha|daniel/i.test(v.name) ? 2 : 0) +
-    (/en-(gb|us)/i.test(v.lang) ? 1 : 0)
-  return [...pool].sort((a, b) => rank(b) - rank(a))[0] ?? null
-}
-
-if (canSpeak) {
-  chosenVoice = pickVoice()
-  window.speechSynthesis.onvoiceschanged = () => {
-    chosenVoice = pickVoice()
-  }
-}
-
-/** Turn chat text into something that sounds natural when read aloud. */
-export function toSpeech(text: string): string {
-  return text
-    .replace(/\*\*([^*]+)\*\*/g, '$1')
-    .replace(/^\s*[-•*]\s+/gm, '')
-    .replace(/\/ai-lab\b/g, 'the AI Lab page')
-    .replace(/\/(about|services|portfolio|partners|contact|quote)\b/g, 'the $1 page')
-    .replace(/abdulla@octopustech\.org/g, 'abdulla at octopus tech dot org')
-    .replace(/\b([a-z0-9-]+)\.com\b/gi, '$1 dot com')
-    .replace(/OctopusTech/g, 'Octopus Tech')
-    .replace(/\s+/g, ' ')
-    .trim()
-}
-
-export function speak(text: string, onEnd?: () => void): void {
-  if (!canSpeak) return
-  const said = toSpeech(text)
-  if (!said) return
-  const u = new SpeechSynthesisUtterance(said)
-  if (chosenVoice) u.voice = chosenVoice
-  u.lang = chosenVoice?.lang ?? 'en-GB'
-  u.rate = 1.02
-  u.pitch = 1
-  if (onEnd) u.onend = onEnd
-  window.speechSynthesis.speak(u) // queued after anything already speaking
-}
-
-export function stopSpeaking(): void {
-  stopGreeting()
-  if (canSpeak) window.speechSynthesis.cancel()
-}
-
-/**
- * Speaks a streaming reply sentence by sentence, so Octo starts talking while the
- * rest of the answer is still arriving.
- */
-export class SentenceSpeaker {
-  private buffer = ''
-  constructor(private enabled: () => boolean) {}
-
-  push(chunk: string): void {
-    this.buffer += chunk
-    // Speak everything up to the last complete sentence: a . ! ? or line break that is
-    // followed by whitespace (so "koyagambia.com" or "3.5" isn't cut mid-word).
-    const complete = this.buffer.match(/^[\s\S]*[.!?\n](?=\s)/)
-    if (!complete) return
-    this.buffer = this.buffer.slice(complete[0].length)
-    if (this.enabled()) speak(complete[0])
-  }
-
-  flush(): void {
-    if (this.buffer.trim() && this.enabled()) speak(this.buffer)
-    this.buffer = ''
-  }
-
-  reset(): void {
-    this.buffer = ''
-  }
-}
-
-// ---------- Listening ----------
 
 export interface ListenHandlers {
   onInterim: (text: string) => void
@@ -229,4 +83,212 @@ export function listen(h: ListenHandlers): () => void {
   }
   rec.start()
   return () => rec.stop()
+}
+
+// ---------- Mute preference (voice on by default when the clone is configured) ----------
+
+const MUTE_KEY = 'octo-voice-muted-v2'
+export function loadMuted(): boolean {
+  try {
+    return localStorage.getItem(MUTE_KEY) === '1'
+  } catch {
+    return false
+  }
+}
+export function saveMuted(muted: boolean): void {
+  try {
+    localStorage.setItem(MUTE_KEY, muted ? '1' : '0')
+  } catch {
+    /* preference just won't persist */
+  }
+}
+
+// ---------- Abdulla's recorded greeting ----------
+
+/** Abdulla's own recorded welcome (AAC/.m4a plays in every modern browser). */
+export const GREETING_URL = '/audio/welcome.m4a'
+
+let greetingAvailable: Promise<boolean> | null = null
+
+export function hasGreeting(): Promise<boolean> {
+  if (!greetingAvailable) {
+    greetingAvailable = fetch(GREETING_URL, { method: 'HEAD' })
+      .then((r) => r.ok && (r.headers.get('content-type') ?? '').startsWith('audio'))
+      .catch(() => false)
+  }
+  return greetingAvailable
+}
+
+let greetingAudio: HTMLAudioElement | null = null
+
+/** Play the recorded greeting (call from a click). onEnd always runs, even with no recording. */
+export function playGreeting(onEnd: () => void): void {
+  hasGreeting().then((ok) => {
+    if (!ok) return onEnd()
+    greetingAudio?.pause()
+    const audio = new Audio(GREETING_URL)
+    greetingAudio = audio
+    let done = false
+    const finish = () => {
+      if (done) return
+      done = true
+      onEnd()
+    }
+    audio.onended = finish
+    audio.onerror = finish
+    audio.play().catch(finish)
+  })
+}
+
+// ---------- Speaking in the cloned voice ----------
+
+/** Turn chat text into something that sounds natural when read aloud. */
+export function toSpeech(text: string): string {
+  return text
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/^\s*[-•*]\s+/gm, '')
+    .replace(/\/ai-lab\b/g, 'the AI Lab page')
+    .replace(/\/ai-engineering\b/g, 'the AI Engineering and Software Development page')
+    .replace(/\/(about|services|portfolio|partners|contact|quote)\b/g, 'the $1 page')
+    .replace(/abdulla@octopustech\.org/g, 'abdulla at octopus tech dot org')
+    .replace(/\b([a-z0-9-]+)\.com\b/gi, '$1 dot com')
+    .replace(/OctopusTech/g, 'Octopus Tech')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+const MAX_SPOKEN_CHARS = 380 // keep each request under the backend's per-request cap
+
+/** Split long sentences at commas/semicolons (or hard-wrap) so each request stays small. */
+function splitLong(text: string): string[] {
+  if (text.length <= MAX_SPOKEN_CHARS) return [text]
+  const parts: string[] = []
+  let current = ''
+  for (const piece of text.split(/(?<=[,;:])\s+/)) {
+    if ((current + ' ' + piece).trim().length > MAX_SPOKEN_CHARS && current) {
+      parts.push(current.trim())
+      current = piece
+    } else {
+      current = (current + ' ' + piece).trim()
+    }
+  }
+  if (current) parts.push(current.trim())
+  return parts.flatMap((p) => (p.length <= MAX_SPOKEN_CHARS ? [p] : p.match(new RegExp(`.{1,${MAX_SPOKEN_CHARS}}(\\s|$)`, 'g')) ?? [p]))
+}
+
+/**
+ * Speaks a streaming reply in Abdulla's cloned voice, sentence by sentence.
+ * Fetches the next sentence's audio while the current one plays, so speech flows without gaps.
+ */
+export class VoiceQueue {
+  private buffer = ''
+  private pending: string[] = []
+  private nextAudio: Promise<string | null> | null = null
+  private playing: HTMLAudioElement | null = null
+  private active = false
+  private disabled = false
+  private aborter = new AbortController()
+
+  constructor(private enabled: () => boolean, private onState?: (speaking: boolean) => void) {}
+
+  /** Feed streamed text; complete sentences are queued for speech. */
+  push(chunk: string): void {
+    this.buffer += chunk
+    const complete = this.buffer.match(/^[\s\S]*[.!?\n](?=\s)/)
+    if (!complete) return
+    this.buffer = this.buffer.slice(complete[0].length)
+    this.enqueue(complete[0])
+  }
+
+  /** The reply finished: speak whatever is left. */
+  flush(): void {
+    if (this.buffer.trim()) this.enqueue(this.buffer)
+    this.buffer = ''
+  }
+
+  stop(): void {
+    this.aborter.abort()
+    this.aborter = new AbortController()
+    this.pending = []
+    this.buffer = ''
+    this.nextAudio = null
+    this.playing?.pause()
+    this.playing = null
+    this.setActive(false)
+  }
+
+  private enqueue(text: string): void {
+    if (this.disabled || !this.enabled()) return
+    const spoken = toSpeech(text)
+    if (!spoken) return
+    this.pending.push(...splitLong(spoken))
+    if (!this.active) this.playNext()
+  }
+
+  private fetchAudio(text: string): Promise<string | null> {
+    return fetch(`${API_BASE_URL}/ai/speak`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text }),
+      signal: this.aborter.signal,
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          // Limit reached or voice unavailable: stay silent for the rest of this visit
+          if (res.status === 429 || res.status === 502 || res.status === 503) this.disabled = true
+          return null
+        }
+        return URL.createObjectURL(await res.blob())
+      })
+      .catch(() => null)
+  }
+
+  private setActive(on: boolean) {
+    this.active = on
+    this.onState?.(on)
+  }
+
+  private async playNext(): Promise<void> {
+    if (!this.enabled() || this.disabled) return this.stop()
+
+    // 1. The clip to play now: the one prefetched last round, or fetch the next sentence
+    let clip = this.nextAudio
+    this.nextAudio = null
+    if (!clip) {
+      const text = this.pending.shift()
+      if (text === undefined) return this.setActive(false) // nothing left to say
+      clip = this.fetchAudio(text)
+    }
+    this.setActive(true)
+
+    // 2. Start fetching the sentence after it, so it's ready when this one ends
+    const following = this.pending.shift()
+    if (following !== undefined) this.nextAudio = this.fetchAudio(following)
+
+    // 3. Play it (skip silently if that sentence failed)
+    const url = await clip
+    if (!url) return this.playNext()
+    const audio = new Audio(url)
+    this.playing = audio
+    await new Promise<void>((resolve) => {
+      audio.onended = () => resolve()
+      audio.onerror = () => resolve()
+      audio.play().catch(() => resolve())
+    })
+    URL.revokeObjectURL(url)
+    if (this.playing === audio) this.playing = null
+    this.playNext()
+  }
+}
+
+// One shared queue, so starting to listen can silence whatever Octo is saying
+let activeQueue: VoiceQueue | null = null
+export function registerQueue(q: VoiceQueue): void {
+  activeQueue = q
+}
+
+export function stopSpeaking(): void {
+  greetingAudio?.pause()
+  greetingAudio = null
+  activeQueue?.stop()
 }

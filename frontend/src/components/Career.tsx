@@ -7,39 +7,39 @@ const roles = [
     role: 'Account Supervisor',
     period: 'Current',
     summary:
-      'Solving day-to-day problems for businesses and government institutions on one of Africa’s fastest-growing mobile money networks, and training their teams to use technology to fix everyday problems themselves.',
+      'Resolves operational problems for business and government accounts on one of Africa’s fastest-growing mobile money networks, and equips their teams to address them through technology.',
     points: [],
   },
   {
     company: 'Wave Mobile Money',
     role: 'Deployment Officer, Payments',
     period: 'Previously',
-    summary: 'Joined the payments team, rolling Wave out to merchants.',
-    points: ['Helped grow the merchant network to a billion dalasis in transaction volume'],
+    summary: 'Drove merchant deployment within the payments division.',
+    points: ['Contributed to scaling the merchant network to a billion dalasis in transaction volume'],
   },
   {
     company: 'Sourcertz Technology Limited',
     role: 'Digital Projects Manager',
     period: 'From 2022',
     summary:
-      'Managed digital projects for fintech and energy clients, working with banks, telecoms and fintech partners.',
+      'Managed digital programmes for fintech and energy clients across a network of banks, telecoms operators and fintech partners.',
     points: [
-      'Supported the development of PlugDrive, an EV charging platform',
-      'Managed forecourt fuel management software for global stakeholders',
-      'Contributed to API design and system integrations',
-      'Helped ensure compliance with KYC, AML and Central Bank of Ghana regulations',
-      'Supported security protocols, fraud prevention and system performance monitoring',
+      'Supported the development of PlugDrive, an electric-vehicle charging platform',
+      'Managed forecourt fuel-management software on behalf of global stakeholders',
+      'Contributed to API architecture and systems integration',
+      'Upheld compliance with KYC, AML and Central Bank of Ghana regulatory requirements',
+      'Supported security protocols, fraud prevention and system-performance monitoring',
     ],
   },
   {
     company: 'Access Bank',
     role: 'Digital Projects Manager',
     period: '2021 – 2022',
-    summary: 'Managed digital banking and fintech projects.',
+    summary: 'Led digital banking and fintech initiatives.',
     points: [
-      'Managed the Instant Visa Card Issuance project',
-      'Oversaw the SMS Alerts service for real-time transaction notifications',
-      'Worked with Interswitch to manage ATMs and optimise Postilion transaction processing',
+      'Managed the Instant Visa Card Issuance programme',
+      'Oversaw the SMS Alerts service for real-time transaction notification',
+      'Partnered with Interswitch on ATM management and Postilion transaction-processing optimisation',
     ],
   },
 ]
@@ -73,8 +73,8 @@ const Career = () => (
         <span className="section-label">Career</span>
         <h2 id="career-title" className="section-title-main">Experience</h2>
         <p className="section-intro">
-          Still young and still building, in my career and in business. Here's where I've learned to solve real problems
-          for banks, fintechs, businesses and government.
+          An early career already defined by accountability for systems that banks, fintechs, enterprises and public
+          institutions depend on, and a business built on the same standard.
         </p>
       </motion.div>
 

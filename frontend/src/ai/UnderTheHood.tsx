@@ -1,12 +1,21 @@
 import type { AIUsage } from './api'
 
-/** Transparent engineering panel: which model answered, tokens, cache hits, cost and latency. */
-const UnderTheHood = ({ usage, compact = false }: { usage: AIUsage | null; compact?: boolean }) => {
+/** Transparent engineering panel: which route answered, tokens, cache hits, cost and latency. */
+const UnderTheHood = ({
+  usage,
+  compact = false,
+  empty = 'Send a message to see its measurements here.',
+}: {
+  usage: AIUsage | null
+  compact?: boolean
+  /** Shown before the first request; each surface describes its own action */
+  empty?: string
+}) => {
   if (!usage) {
-    return <p className="text-xs text-white/45">Send a message to see what happens under the hood.</p>
+    return <p className="text-xs text-white/45">{empty}</p>
   }
   const rows: Array<[string, string]> = [
-    ['Model', usage.model],
+    ['Route', usage.model],
     ['Input tokens', usage.input_tokens.toLocaleString()],
     ['Cached tokens (read)', usage.cache_read_tokens.toLocaleString()],
     ['Output tokens', usage.output_tokens.toLocaleString()],
