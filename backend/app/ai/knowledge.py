@@ -71,8 +71,12 @@ OctopusTech no longer takes standalone design work and focuses on web, software 
    suites, prompt-injection testing, quality/cost/latency measurement); inference optimisation (model
    right-sizing, prompt caching, spend caps). Engagements run: Diagnose (Five Ws), Prototype, Evaluate,
    Deploy, Improve. Proof: this assistant (Octo) and the Five Ws Project Scoper on /ai-lab are his production AI
-   systems; caching cut Octo's cost per answer by about 75%. He has not yet published client AI case studies,
-   so do not claim specific client AI projects.
+   systems; caching cut Octo's cost per answer by about 75%. Client AI work: Speed HR (for Ambil Speed) has an AI
+   agent built in. The owner types plain English and it does the work through 17 tools: look up staff, hire,
+   give raises, promote, move stations, give loans, set the month's pay variables, approve or publish payroll,
+   print sheets, and run and pay the whole month-end payroll. Business rules are enforced in code (a month
+   cannot be paid until every station is confirmed) and only signed-in users can use it. Claim only this
+   client AI project; do not invent others.
 6. System design, backend engineering, cloud and scalability (see /ai-engineering, "Systems at Scale"):
    architectures sized for their load; typed Python/FastAPI services over PostgreSQL with streaming APIs,
    background jobs and role-based access; containerised (Docker) deployment on Linux behind Nginx; horizontal
@@ -110,7 +114,8 @@ Pricing: agency quality without agency pricing. Exact prices come from a quote a
 - Ambil Speed Petroleum (live at ambilspeed.com): fuel retailer website with station finder, bulk and delivery
   enquiries, WhatsApp contact. Moved from WordPress to a fast hand-coded site.
 - Speed HR (in use at Ambil Speed): HR and payroll system across the company's stations: employee records,
-  monthly payroll and loans, one-click SSHFC, ICF and GRA PAYE submission sheets as PDF or Excel.
+  monthly payroll and loans, one-click SSHFC, ICF and GRA PAYE submission sheets as PDF or Excel, and an AI
+  agent that runs month-end payroll from plain English.
   React, TypeScript, FastAPI, PostgreSQL, Docker.
 - Etikz (production-ready ticketing platform for event promoters in The Gambia): buyers pay with Wave mobile
   money and keep a signed QR ticket on their phone; promoters manage events, ticket tiers, flyers, guest lists

@@ -69,8 +69,8 @@ const projects: Project[] = [
     client: 'Ambil Speed, The Gambia',
     category: 'Platforms',
     summary:
-      'An HR and payroll system operating across the company’s station network: workforce records, monthly payroll and staff loans, with statutory SSHFC, ICF and GRA PAYE submissions generated in a single action as PDF or Excel.',
-    stack: ['React', 'TypeScript', 'FastAPI', 'PostgreSQL', 'Docker'],
+      'An HR and payroll system operating across the company’s station network: workforce records, monthly payroll and staff loans, with statutory SSHFC, ICF and GRA PAYE submissions generated in a single action as PDF or Excel. A built-in AI agent runs the whole month-end payroll from plain English.',
+    stack: ['React', 'TypeScript', 'FastAPI', 'PostgreSQL', 'Docker', 'AI agent'],
     status: 'In use',
     image: '/images/portfolio/speed-hr.webp',
     imagePosition: 'object-left-top',

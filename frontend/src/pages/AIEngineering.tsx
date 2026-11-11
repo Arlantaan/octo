@@ -43,15 +43,15 @@ const SOFTWARE: Discipline[] = [
     proof: 'Koya’s platform runs menus, reservations and waiter ordering; Sensation by Sanu sells online with its own product admin.',
   },
   {
-    icon: 'fa-server',
-    title: 'Backend & API Engineering',
+    icon: 'fa-database',
+    title: 'Backend, APIs & Databases',
     problem: 'The backend is where correctness lives: data integrity, permissions, integrations and every rule the business depends on.',
     deliver: [
-      'Typed Python and FastAPI services over well-modelled PostgreSQL',
-      'REST and streaming APIs, authentication and role-based access',
-      'Background jobs, scheduled tasks and reliable third-party integrations',
+      'Well-modelled PostgreSQL: schemas, migrations, indexing and query performance',
+      'Typed Python and FastAPI services with REST and streaming APIs',
+      'Authentication, role-based access, background jobs and reliable integrations',
     ],
-    proof: 'Speed HR, the Koya platform and Octo’s streaming API are FastAPI and PostgreSQL services in production.',
+    proof: 'Speed HR runs payroll for about 120 staff across 7 stations on FastAPI and PostgreSQL; Etikz guarantees every ticket is sold and admitted exactly once.',
   },
   {
     icon: 'fa-layer-group',
@@ -138,11 +138,11 @@ const AI: Discipline[] = [
     title: 'Agents & Automation',
     problem: 'The next step beyond chat: AI that acts, by reading systems, filling forms, routing work and triggering processes.',
     deliver: [
-      'Tool-using agents scoped to explicit, least-privilege permissions',
-      'Human confirmation on any consequential action',
-      'Integration with existing business systems through their APIs',
+      'Agents that operate your own system in plain English, through typed tools',
+      'Business rules and approvals enforced in code, never left to the model',
+      'Signed-in access only, scoped to what each user is allowed to do',
     ],
-    proof: 'The Scoper hands its brief directly into the quote workflow, an AI step embedded in a real business process.',
+    proof: 'Speed HR’s agent runs month-end payroll from plain English: 17 tools that hire, give raises and loans, set pay, approve, print and pay, and it cannot pay a month until every station is confirmed.',
   },
   {
     icon: 'fa-vial-circle-check',
@@ -286,17 +286,17 @@ const AIEngineering = () => (
 
       {/* Software Development */}
       <SectionHead
-        label="SD · Software Development"
-        title="Software that runs the business"
-        text="The foundation everything else stands on. There is no dependable AI without dependable software beneath it."
+        label="SD"
+        title="Software Development"
+        text="The systems that run the business, AI or not. The foundation everything else stands on: there is no dependable AI without dependable software beneath it."
       />
       <DisciplineGrid items={SOFTWARE} />
 
       {/* AI Engineering */}
       <SectionHead
-        label="AIE · AI Engineering"
-        title="From foundation model to production system"
-        text="Each capability is delivered as working software, with the evidence to prove it."
+        label="AIE"
+        title="AI Engineering"
+        text="From foundation model to production system: AI built into real software, with the evidence to prove it."
       />
       <DisciplineGrid items={AI} />
 
