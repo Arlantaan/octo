@@ -3234,3 +3234,45 @@ select option:checked, select option:hover { background-color: #14532d; }
 /* Seven steps on one row on wide screens; never a lone orphan below */
 @media (min-width: 1100px) { .cs-flow { grid-template-columns: repeat(7, minmax(0, 1fr)); } }
 @media (min-width: 640px) and (max-width: 1099px) { .cs-flow { grid-template-columns: repeat(4, minmax(0, 1fr)); } .cs-flow > :nth-child(5) { grid-column-start: 1; } }
+
+/* ===== PHONES: nothing covers the page, and text scales to the screen ===== */
+
+/* Phones never inflate text on their own, and long words wrap instead of being cut off */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+h1, h2, h3, h4, p, li, dd, a, span { overflow-wrap: break-word; }
+h1, h2, h3 { hyphens: manual; text-wrap: balance; }
+
+/* Fluid type: every rem-based size (Tailwind text-*, spacing) scales down smoothly on small phones,
+   from 16px at 440px wide to 14px at 360px and below */
+@media (max-width: 439px) {
+  html { font-size: clamp(14px, calc(5px + 2.5vw), 16px); }
+}
+
+/* Octo's greeting on phones: a slim pill beside the button instead of a card over the content */
+.octo-greet-compact { display: none; }
+@media (max-width: 639px) {
+  .octo-greet {
+    width: auto;
+    max-width: calc(100vw - 3.236rem - 3 * var(--space-s));
+    right: calc(var(--space-s) + 3.236rem + var(--space-xs));
+    bottom: calc(var(--space-s) + (3.236rem - 2.618rem) / 2);
+    padding: 0;
+    border-radius: 999px;
+  }
+  .octo-greet-full { display: none; }
+  .octo-greet-compact { display: flex; align-items: center; height: 2.618rem; }
+  .octo-greet-compact-open {
+    height: 100%; padding: 0 0.382rem 0 1rem;
+    font-size: 0.8125rem; font-weight: 600; color: #fff; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  .octo-greet-compact-close {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 2.236rem; height: 100%; color: rgba(255, 255, 255, 0.5);
+  }
+  .octo-greet-compact-close:hover { color: #fff; }
+}
+
+/* Big figures size themselves to their card, not the screen, so "$0.0001" is never cut off */
+.aie-metric { container-type: inline-size; }
+.aie-metric-value { font-size: min(var(--text-xl), 20cqi); white-space: nowrap; }

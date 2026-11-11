@@ -257,6 +257,16 @@ const AskOcto = () => {
             animate={{ opacity: 1, y: 0, scale: 1, transition: { duration: 0.618, ease: EASE_PHI } }}
             exit={{ opacity: 0, y: 8, transition: { duration: 0.236 } }}
           >
+            {/* Phones: one slim line beside the button, so the greeting never covers the page */}
+            <div className="octo-greet-compact">
+              <button className="octo-greet-compact-open" onClick={() => openPanel({ greetAloud: false })}>
+                Hi, I'm Octo. Need a hand?
+              </button>
+              <button className="octo-greet-compact-close" onClick={dismissGreeting} aria-label="Dismiss greeting">
+                <i className="fas fa-xmark" />
+              </button>
+            </div>
+            <div className="octo-greet-full">
             <button className="octo-greet-close" onClick={dismissGreeting} aria-label="Dismiss greeting">
               <i className="fas fa-xmark" />
             </button>
@@ -278,6 +288,7 @@ const AskOcto = () => {
               <button className="octo-greet-secondary" onClick={() => openPanel({ greetAloud: false })}>
                 <i className="fas fa-keyboard mr-1.5" /> Type instead
               </button>
+            </div>
             </div>
           </motion.div>
         )}
