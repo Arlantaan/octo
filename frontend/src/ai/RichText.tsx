@@ -1,9 +1,10 @@
 import { Fragment } from 'react'
 import { Link } from 'react-router-dom'
+import { WHATSAPP_DISPLAY, whatsappLink } from '../config/contact'
 
 // Turns site paths (/portfolio), known domains and **bold** into links/emphasis, and "- " lines into bullets.
 // Everything else stays plain text (no HTML is ever injected).
-const TOKEN = /(\*\*[^*]+\*\*|\/(?:about|services|portfolio|partners|contact|quote|ai-lab|ai-engineering|work\/etikz)\b|\b(?:koyagambia\.com|ambilspeed\.com|trustqualitydesign\.com)\b|\babdulla@octopustech\.org\b)/g
+const TOKEN = /(\*\*[^*]+\*\*|\/(?:about|services|portfolio|partners|contact|quote|ai-lab|ai-engineering|work\/etikz)\b|\b(?:koyagambia\.com|ambilspeed\.com|trustqualitydesign\.com)\b|\babdulla@octopustech\.org\b|\+220 877 872 586)/g
 
 function renderInline(text: string, keyBase: string) {
   return text.split(TOKEN).map((part, i) => {
@@ -15,6 +16,13 @@ function renderInline(text: string, keyBase: string) {
         <Link key={key} to={part} className="text-green-400 underline underline-offset-2 hover:text-green-300">
           {part}
         </Link>
+      )
+    }
+    if (part === WHATSAPP_DISPLAY) {
+      return (
+        <a key={key} href={whatsappLink()} target="_blank" rel="noopener noreferrer" className="text-green-400 underline underline-offset-2">
+          {part}
+        </a>
       )
     }
     if (part.includes('@')) {

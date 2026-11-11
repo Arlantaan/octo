@@ -1,3 +1,4 @@
+import { WHATSAPP_DISPLAY, whatsappLink } from '../config/contact'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
@@ -39,7 +40,7 @@ const Contact = () => {
 
   const contactInfo = [
     { icon: 'fa-envelope', title: 'Email', content: 'abdulla@octopustech.org' },
-    { icon: 'fa-phone', title: 'Phone', content: 'Available upon request' },
+    { icon: 'fa-whatsapp', title: 'WhatsApp', content: WHATSAPP_DISPLAY },
     { icon: 'fa-clock', title: 'Response Time', content: 'Within 24 hours' },
     { icon: 'fa-globe', title: 'Service Area', content: 'Worldwide' },
   ]
@@ -196,12 +197,21 @@ const Contact = () => {
               className="contact-info-item"
             >
               <div className="contact-info-icon">
-                <i className={`fas ${info.icon}`}></i>
+                <i className={`${info.icon === 'fa-whatsapp' ? 'fab' : 'fas'} ${info.icon}`}></i>
               </div>
               <h4 className="contact-info-title">{info.title}</h4>
               {info.title === 'Email' ? (
                 <a 
                   href={`mailto:${info.content}?subject=Inquiry from Octopus Tech Website&body=Hello,%0D%0A%0D%0APlease tell us about your project or inquiry:%0D%0A%0D%0A%0D%0A%0D%0AThank you!`}
+                  className="contact-info-content hover:text-green-400 transition-colors cursor-pointer"
+                >
+                  {info.content}
+                </a>
+              ) : info.title === 'WhatsApp' ? (
+                <a
+                  href={whatsappLink()}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="contact-info-content hover:text-green-400 transition-colors cursor-pointer"
                 >
                   {info.content}

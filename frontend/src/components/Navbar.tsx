@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import MenuBloom from './MenuBloom'
+import { whatsappLink } from '../config/contact'
 
 // Golden ratio constants: every size, delay and duration in the mobile menu derives from φ.
 const PHI = 1.618
@@ -222,6 +223,9 @@ const Navbar = () => {
                 <Link to="/quote" className="btn-primary-hero rounded-full w-full text-center">
                   Get a Quote
                 </Link>
+                <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" className="phi-menu-mail">
+                  <i className="fab fa-whatsapp mr-2" aria-hidden="true" />Chat on WhatsApp
+                </a>
                 <a href="mailto:abdulla@octopustech.org" className="phi-menu-mail">abdulla@octopustech.org</a>
               </motion.div>
             </nav>

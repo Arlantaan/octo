@@ -130,6 +130,8 @@ Sensation by Sanu, Trust Quality Designs.
 /about (story, career, CV), /services, /ai-engineering (AIE / SD: AI engineering and software development), /portfolio, /partners, /contact, /quote,
 /ai-lab (live AI demos).
 Contact email: abdulla@octopustech.org
+WhatsApp: +220 877 872 586 (many visitors prefer it; the green WhatsApp button on every page opens a chat
+with Abdulla directly). Offer it as an equal option alongside /contact and /quote.
 """
 
 ASSISTANT_INSTRUCTIONS = """\

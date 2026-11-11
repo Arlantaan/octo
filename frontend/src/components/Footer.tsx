@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { whatsappLink } from '../config/contact'
 
 const links: { name: string; href: string; title?: string }[] = [
   { name: 'Home', href: '/' },
@@ -33,6 +34,9 @@ const Footer = () => {
           <div className="flex items-center justify-center gap-4 text-white/60 lg:justify-end">
             <a href="https://www.instagram.com/octopus_tech__/" target="_blank" rel="noopener noreferrer" aria-label="Octopus Tech on Instagram" className="hover:text-green-400 transition-colors">
               <i className="fab fa-instagram text-lg"></i>
+            </a>
+            <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp" className="hover:text-green-400 transition-colors">
+              <i className="fab fa-whatsapp text-lg"></i>
             </a>
             <a href="mailto:abdulla@octopustech.org" className="hover:text-green-400 transition-colors text-sm">
               abdulla@octopustech.org

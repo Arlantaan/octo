@@ -3276,3 +3276,24 @@ h1, h2, h3 { hyphens: manual; text-wrap: balance; }
 /* Big figures size themselves to their card, not the screen, so "$0.0001" is never cut off */
 .aie-metric { container-type: inline-size; }
 .aie-metric-value { font-size: min(var(--text-xl), 20cqi); white-space: nowrap; }
+
+/* WhatsApp click-to-chat: a round button stacked directly above Octo's, same right edge */
+.wa-fab {
+  position: fixed; z-index: 44;
+  right: var(--space-m);
+  bottom: calc(var(--space-m) + 3.236rem + var(--space-xs));
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 3.236rem; height: 3.236rem; border-radius: 999px;
+  font-size: 1.618rem; color: #fff; background: #25d366;
+  box-shadow: 0 10px 28px rgba(37, 211, 102, 0.35);
+  transition: transform var(--dur-fast) var(--ease-phi), box-shadow var(--dur-fast);
+}
+.wa-fab:hover { transform: translateY(-2px); box-shadow: 0 14px 36px rgba(37, 211, 102, 0.5); }
+.wa-fab:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+@media (max-width: 639px) {
+  .wa-fab { right: var(--space-s); bottom: calc(var(--space-s) + 3.236rem + var(--space-xs)); }
+}
+/* The desktop greeting card sits above both buttons, so it never hides the WhatsApp one */
+@media (min-width: 640px) {
+  .octo-greet { bottom: calc(var(--space-m) + 2 * 3.236rem + 2 * var(--space-xs)); }
+}

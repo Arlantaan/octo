@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { whatsappLink } from '../config/contact'
 import { getStatus, streamChat, type AIStatus, type ChatTurn } from './api'
 import RichText from './RichText'
 import { canListen, listen, loadMuted, playGreeting, registerQueue, saveMuted, stopSpeaking, VoiceQueue } from './voice'
@@ -309,6 +310,25 @@ const AskOcto = () => {
             <i className="fas fa-wand-magic-sparkles" aria-hidden="true" />
             <span className="hidden sm:inline">Ask Octo</span>
           </motion.button>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {!open && (
+          <motion.a
+            key="wa-fab"
+            href={whatsappLink()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="wa-fab"
+            aria-label="Chat with Abdulla on WhatsApp"
+            title="Chat on WhatsApp"
+            initial={{ opacity: 0, scale: 0.618 }}
+            animate={{ opacity: 1, scale: 1, transition: { duration: 0.382, ease: EASE_PHI, delay: 0.236 } }}
+            exit={{ opacity: 0, scale: 0.618, transition: { duration: 0.236 } }}
+          >
+            <i className="fab fa-whatsapp" aria-hidden="true" />
+          </motion.a>
         )}
       </AnimatePresence>
 
